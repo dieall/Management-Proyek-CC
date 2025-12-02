@@ -19,14 +19,12 @@ class Mustahik extends Model
         'no_hp',
         'surat_dtks',
         'status',
-        'password',
         'tgl_daftar',
     ];
 
     protected function casts(): array
     {
         return [
-            'password' => 'hashed',
             'tgl_daftar' => 'datetime',
         ];
     }

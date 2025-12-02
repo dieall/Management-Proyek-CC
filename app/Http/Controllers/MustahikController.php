@@ -39,12 +39,7 @@ class MustahikController extends Controller
             'no_hp' => 'nullable|string|max:20',
             'surat_dtks' => 'nullable|string|max:255',
             'status' => 'required|in:aktif,non-aktif',
-            'password' => 'nullable|string|min:6',
         ]);
-
-        if ($validated['password']) {
-            $validated['password'] = bcrypt($validated['password']);
-        }
 
         Mustahik::create($validated);
 
@@ -82,14 +77,7 @@ class MustahikController extends Controller
             'no_hp' => 'nullable|string|max:20',
             'surat_dtks' => 'nullable|string|max:255',
             'status' => 'required|in:aktif,non-aktif',
-            'password' => 'nullable|string|min:6',
         ]);
-
-        if ($validated['password']) {
-            $validated['password'] = bcrypt($validated['password']);
-        } else {
-            unset($validated['password']);
-        }
 
         $mustahik->update($validated);
 
