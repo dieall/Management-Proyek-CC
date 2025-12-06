@@ -124,7 +124,7 @@
                                     @foreach($todaySchedules as $schedule)
                                     <tr>
                                         <td>{{ $schedule->committee->full_name ?? '-' }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }} - 
+                                        <td>{{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }} -
                                             {{ \Carbon\Carbon::parse($schedule->end_time)->format('H:i') }}</td>
                                         <td>{{ $schedule->location }}</td>
                                         <td>
@@ -254,7 +254,7 @@
                                     Jatuh tempo: {{ \Carbon\Carbon::parse($task->due_date)->format('d/m/Y') }}
                                 </small>
                                 <div class="progress mt-2" style="height: 5px;">
-                                    <div class="progress-bar bg-{{ $task->status == 'overdue' ? 'danger' : 'warning' }}" 
+                                    <div class="progress-bar bg-{{ $task->status == 'overdue' ? 'danger' : 'warning' }}"
                                          style="width: {{ $task->progress_percentage }}%"></div>
                                 </div>
                             </div>

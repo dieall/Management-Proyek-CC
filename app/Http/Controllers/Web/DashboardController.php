@@ -47,19 +47,19 @@ class DashboardController extends Controller
         // Urgent tasks (due in 2 days or overdue)
         $urgentTasks = TaskAssignment::with(['committee', 'jobResponsibility'])
             ->whereIn('status', ['pending', 'in_progress'])
-            ->where(function($query) {
+            ->where(function ($query) {
                 $query->where('due_date', '<=', today()->addDays(2))
-                      ->orWhere('status', 'overdue');
+                    ->orWhere('status', 'overdue');
             })
             ->orderBy('due_date')
             ->limit(5)
             ->get();
 
         return view('dashboard', compact(
-            'stats', 
-            'todaySchedules', 
-            'recentCommittees', 
-            'upcomingDuties', 
+            'stats',
+            'todaySchedules',
+            'recentCommittees',
+            'upcomingDuties',
             'urgentTasks'
         ));
     }

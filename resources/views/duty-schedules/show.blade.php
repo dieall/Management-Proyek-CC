@@ -49,7 +49,7 @@
                         <div class="col-6">
                             <strong>Waktu:</strong><br>
                             <span class="text-primary">
-                                {{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }} - 
+                                {{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }} -
                                 {{ \Carbon\Carbon::parse($schedule->end_time)->format('H:i') }}
                             </span>
                         </div>
@@ -58,7 +58,7 @@
                     <div class="row mb-3">
                         <div class="col-6">
                             <strong>Jenis Tugas:</strong><br>
-                            <span class="badge bg-{{ $this->getDutyTypeColor($schedule->duty_type) }}">
+                            <span class="badge bg-{{ getDutyTypeColor($schedule->duty_type) }}">
                                 {{ ucfirst($schedule->duty_type) }}
                             </span>
                         </div>
@@ -111,7 +111,7 @@
                 </div>
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-3">
-                        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center" 
+                        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center"
                              style="width: 60px; height: 60px;">
                             <i class="fas fa-user fa-2x text-white"></i>
                         </div>
@@ -147,7 +147,7 @@
                     </ul>
 
                     <div class="text-center mt-3">
-                        <a href="{{ route('committees.show', $schedule->committee->id) }}" 
+                        <a href="{{ route('committees.show', $schedule->committee->id) }}"
                            class="btn btn-primary btn-sm">
                             <i class="fas fa-external-link-alt"></i> Lihat Profil Lengkap
                         </a>
@@ -166,7 +166,7 @@
                     </h6>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('duty-schedules.updateStatus', $schedule->id) }}" method="POST">
+                    <form action="{{ route('duty-schedules.update-status', $schedule->id) }}" method="POST">
                         @csrf
                         <div class="row">
                             <div class="col-md-8 mb-3">
@@ -219,7 +219,7 @@
                                     <tr>
                                         <td>{{ \Carbon\Carbon::parse($similar->duty_date)->format('d/m/Y') }}</td>
                                         <td>
-                                            {{ \Carbon\Carbon::parse($similar->start_time)->format('H:i') }} - 
+                                            {{ \Carbon\Carbon::parse($similar->start_time)->format('H:i') }} -
                                             {{ \Carbon\Carbon::parse($similar->end_time)->format('H:i') }}
                                         </td>
                                         <td>
@@ -234,7 +234,7 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <a href="{{ route('duty-schedules.show', $similar->id) }}" 
+                                            <a href="{{ route('duty-schedules.show', $similar->id) }}"
                                                class="btn btn-sm btn-info">
                                                 <i class="fas fa-eye"></i>
                                             </a>

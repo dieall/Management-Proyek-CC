@@ -22,7 +22,7 @@ class DutyScheduleController extends Controller
             ->latest('start_time');
 
         // Search
-        if ($request->has('search')) {
+        if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('location', 'like', "%{$search}%")
@@ -34,15 +34,15 @@ class DutyScheduleController extends Controller
         }
 
         // Filter by date
-        if ($request->has('date')) {
+        if ($request->has('date') && $request->date != '') {
             $query->whereDate('duty_date', $request->date);
         }
 
-        if ($request->has('date_from')) {
+        if ($request->has('date_from') && $request->date_from != '') {
             $query->whereDate('duty_date', '>=', $request->date_from);
         }
 
-        if ($request->has('date_to')) {
+        if ($request->has('date_to') && $request->date_to != '') {
             $query->whereDate('duty_date', '<=', $request->date_to);
         }
 
@@ -61,7 +61,7 @@ class DutyScheduleController extends Controller
             $query->where('status', $request->status);
         }
 
-        // Filter by location
+        // Filter by location - PERBAIKAN DI SINI
         if ($request->has('location') && $request->location != '') {
             $query->where('location', 'like', "%{$request->location}%");
         }
@@ -74,11 +74,15 @@ class DutyScheduleController extends Controller
         // Duty types for filter
         $dutyTypes = DutySchedule::select('duty_type')
             ->distinct()
+            ->whereNotNull('duty_type')
+            ->where('duty_type', '!=', '')
             ->pluck('duty_type');
 
         // Locations for filter
         $locations = DutySchedule::select('location')
             ->distinct()
+            ->whereNotNull('location')
+            ->where('location', '!=', '')
             ->pluck('location');
 
         // Pagination

@@ -121,7 +121,7 @@
                             <tr class="{{ $schedule->status == 'ongoing' ? 'table-warning' : '' }}">
                                 <td>
                                     <div class="fw-bold">
-                                        {{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }} - 
+                                        {{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }} -
                                         {{ \Carbon\Carbon::parse($schedule->end_time)->format('H:i') }}
                                     </div>
                                     @php
@@ -150,7 +150,7 @@
                                 </td>
                                 <td>{{ $schedule->location }}</td>
                                 <td>
-                                    <span class="badge bg-{{ $this->getDutyTypeColor($schedule->duty_type) }}">
+                                    <span class="badge bg-{{ getDutyTypeColor($schedule->duty_type) }}">
                                         {{ ucfirst($schedule->duty_type) }}
                                     </span>
                                 </td>
@@ -167,11 +167,11 @@
                                 </td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="{{ route('duty-schedules.show', $schedule->id) }}" 
+                                        <a href="{{ route('duty-schedules.show', $schedule->id) }}"
                                            class="btn btn-sm btn-info" title="Detail">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="{{ route('duty-schedules.edit', $schedule->id) }}" 
+                                        <a href="{{ route('duty-schedules.edit', $schedule->id) }}"
                                            class="btn btn-sm btn-warning" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>

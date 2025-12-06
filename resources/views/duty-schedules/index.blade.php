@@ -16,6 +16,9 @@
             <a href="{{ route('duty-schedules.today') }}" class="btn btn-info">
                 <i class="fas fa-calendar-day"></i> Hari Ini
             </a>
+            <a href="{{ route('duty-schedules.weekly') }}" class="btn btn-danger">
+                <i class="fas fa-calendar-day"></i> MIngguan
+            </a>
             <a href="{{ route('duty-schedules.upcoming') }}" class="btn btn-warning">
                 <i class="fas fa-calendar-week"></i> Mendatang
             </a>
@@ -28,17 +31,17 @@
             <form method="GET" action="{{ route('duty-schedules.index') }}" class="row g-3">
                 <div class="col-md-3">
                     <label class="form-label">Tanggal</label>
-                    <input type="date" name="date" class="form-control" 
+                    <input type="date" name="date" class="form-control"
                            value="{{ request('date') }}">
                 </div>
                 <div class="col-md-3">
                     <label class="form-label">Dari Tanggal</label>
-                    <input type="date" name="date_from" class="form-control" 
+                    <input type="date" name="date_from" class="form-control"
                            value="{{ request('date_from') }}">
                 </div>
                 <div class="col-md-3">
                     <label class="form-label">Sampai Tanggal</label>
-                    <input type="date" name="date_to" class="form-control" 
+                    <input type="date" name="date_to" class="form-control"
                            value="{{ request('date_to') }}">
                 </div>
                 <div class="col-md-3">
@@ -46,7 +49,7 @@
                     <select name="committee_id" class="form-select">
                         <option value="">Semua Pengurus</option>
                         @foreach($committees as $committee)
-                            <option value="{{ $committee->id }}" 
+                            <option value="{{ $committee->id }}"
                                 {{ request('committee_id') == $committee->id ? 'selected' : '' }}>
                                 {{ $committee->full_name }}
                             </option>
@@ -58,7 +61,7 @@
                     <select name="duty_type" class="form-select">
                         <option value="">Semua Jenis</option>
                         @foreach($dutyTypes as $type)
-                            <option value="{{ $type }}" 
+                            <option value="{{ $type }}"
                                 {{ request('duty_type') == $type ? 'selected' : '' }}>
                                 {{ ucfirst($type) }}
                             </option>
@@ -80,7 +83,7 @@
                     <select name="location" class="form-select">
                         <option value="">Semua Lokasi</option>
                         @foreach($locations as $location)
-                            <option value="{{ $location }}" 
+                            <option value="{{ $location }}"
                                 {{ request('location') == $location ? 'selected' : '' }}>
                                 {{ $location }}
                             </option>
@@ -89,7 +92,7 @@
                 </div>
                 <div class="col-md-3">
                     <label class="form-label">Cari</label>
-                    <input type="text" name="search" class="form-control" 
+                    <input type="text" name="search" class="form-control"
                            placeholder="Cari lokasi, catatan, atau nama..."
                            value="{{ request('search') }}">
                 </div>
@@ -133,7 +136,7 @@
                                 </small>
                             </td>
                             <td>
-                                {{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }} - 
+                                {{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }} -
                                 {{ \Carbon\Carbon::parse($schedule->end_time)->format('H:i') }}
                             </td>
                             <td>
@@ -144,7 +147,7 @@
                             </td>
                             <td>{{ $schedule->location }}</td>
                             <td>
-                                <span class="badge bg-{{ $this->getDutyTypeColor($schedule->duty_type) }}">
+                                <span class="badge bg-{{ getDutyTypeColor($schedule->duty_type) }}">
                                     {{ ucfirst($schedule->duty_type) }}
                                 </span>
                                 @if($schedule->is_recurring)
@@ -164,15 +167,15 @@
                             </td>
                             <td>
                                 <div class="btn-group" role="group">
-                                    <a href="{{ route('duty-schedules.show', $schedule->id) }}" 
+                                    <a href="{{ route('duty-schedules.show', $schedule->id) }}"
                                        class="btn btn-sm btn-info" title="Detail">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('duty-schedules.edit', $schedule->id) }}" 
+                                    <a href="{{ route('duty-schedules.edit', $schedule->id) }}"
                                        class="btn btn-sm btn-warning" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <button type="button" class="btn btn-sm btn-danger" 
+                                    <button type="button" class="btn btn-sm btn-danger"
                                             title="Hapus"
                                             onclick="confirmDelete({{ $schedule->id }}, '{{ $schedule->committee->full_name }} - {{ \Carbon\Carbon::parse($schedule->duty_date)->format('d/m/Y') }}')">
                                         <i class="fas fa-trash"></i>
