@@ -3,101 +3,112 @@
 namespace App\Services;
 
 use App\Models\Jamaah;
-use App\Models\Kategori;
 use App\Models\Kegiatan;
 use App\Models\Donasi;
-use Illuminate\Database\Eloquent\Collection;
+use App\Models\RiwayatDonasi; // Pakai Model Transaksi langsung
+use App\Models\KeikutsertaanKegiatan; // Pakai Model Pivot langsung
+use Illuminate\Support\Facades\DB;
 
 class JamaahService
 {
-    public function getAll(): Collection
+    public function getAll(array $filters = [], int $perPage = 15)
     {
-        return Jamaah::all();
+        $query = Jamaah::query();
+
+        if (!empty($filters['username'])) {
+            $query->where('username', 'like', '%' . $filters['username'] . '%');
+        }
+
+        if (!empty($filters['nama_lengkap'])) {
+            $query->where('nama_lengkap', 'like', '%' . $filters['nama_lengkap'] . '%');
+        }
+
+        if (!empty($filters['kategori'])) {
+            $query->whereHas('kategori', function ($q) use ($filters) {
+                $q->where('kategori.id_kategori', $filters['kategori']);
+            });
+        }
+
+        if (isset($filters['status_aktif'])) {
+            $query->where('status_aktif', filter_var($filters['status_aktif'], FILTER_VALIDATE_BOOLEAN));
+        }
+
+        return $query->paginate($perPage);
     }
 
-    public function getById(int $id): ?Jamaah
+    public function getById(int $id): Jamaah
     {
-        return Jamaah::find($id);
+        return Jamaah::findOrFail($id);
     }
 
     public function create(array $data): Jamaah
     {
-        if (isset($data['kata_sandi'])) {
-            $data['kata_sandi'] = bcrypt($data['kata_sandi']);
-        }
-
+        // FIX: Hapus Hash::make() karena Model Jamaah sudah cast 'kata_sandi' => 'hashed'
+        // Data password raw akan otomatis di-hash oleh Eloquent
+        
+        $data['status_aktif'] = $data['status_aktif'] ?? true;
         return Jamaah::create($data);
     }
 
     public function update(Jamaah $jamaah, array $data): Jamaah
     {
-        if (isset($data['kata_sandi'])) {
-            $data['kata_sandi'] = bcrypt($data['kata_sandi']);
+        // Jika password kosong, hapus dari array agar tidak menimpa password lama dengan null/kosong
+        if (empty($data['kata_sandi'])) {
+            unset($data['kata_sandi']);
         }
-
+        
+        // Model akan otomatis handle hashing jika kata_sandi di-set
         $jamaah->update($data);
         return $jamaah;
     }
 
-    public function delete(Jamaah $jamaah): void
+    public function delete(Jamaah $jamaah): bool
     {
-        $jamaah->delete();
+        $jamaah->update(['status_aktif' => false]);
+        return true;
     }
 
-    /* =========================
-     *  LOGIC RELASI JAMA'AH
-     * ========================= */
-
-    /**
-     * Sinkronkan kategori jamaah (pivot kategori_jamaah)
-     * $kategoriIds = [1,2,3]
-     */
-    public function syncKategori(Jamaah $jamaah, array $kategoriIds, ?string $periode = null): void
+    public function syncKategori(Jamaah $jamaah, array $kategoriIds, ?string $periode = null)
     {
-        $syncData = [];
-        foreach ($kategoriIds as $idKategori) {
-            $syncData[$idKategori] = [
+        $sync = [];
+        foreach ($kategoriIds as $id) {
+            $sync[$id] = [
                 'status_aktif' => true,
-                'periode'      => $periode,
+                'periode' => $periode
             ];
         }
-
-        $jamaah->kategori()->sync($syncData);
+        return $jamaah->kategori()->sync($sync);
     }
 
-    /**
-     * Daftarkan jamaah ke kegiatan tertentu
-     */
-    public function daftarKegiatan(Jamaah $jamaah, Kegiatan $kegiatan, ?string $tanggalDaftar = null): void
+    // OPTIMASI: Gunakan Model Pivot KeikutsertaanKegiatan
+    public function daftarKegiatan(Jamaah $jamaah, int $idKegiatan, ?string $tanggalDaftar = null)
     {
-        $jamaah->kegiatan()->attach($kegiatan->id_kegiatan, [
-            'tanggal_daftar'   => $tanggalDaftar ?? now()->toDateString(),
-            'status_kehadiran' => 'belum',
+        // Cek apakah sudah terdaftar
+        $exists = KeikutsertaanKegiatan::where('id_jamaah', $jamaah->id_jamaah)
+                    ->where('id_kegiatan', $idKegiatan)
+                    ->exists();
+
+        if ($exists) {
+            return false; // Atau throw exception
+        }
+
+        return KeikutsertaanKegiatan::create([
+            'id_jamaah' => $jamaah->id_jamaah,
+            'id_kegiatan' => $idKegiatan,
+            'tanggal_daftar' => $tanggalDaftar ?? now(),
+            'status_kehadiran' => 'belum' // Default sesuai migration
         ]);
     }
 
-    /**
-     * Update status kehadiran jamaah di suatu kegiatan
-     */
-    public function updateKehadiran(Jamaah $jamaah, Kegiatan $kegiatan, string $status): void
+    // OPTIMASI: Gunakan Model RiwayatDonasi langsung
+    public function catatDonasi(Jamaah $jamaah, int $idDonasi, float $jumlah, ?string $tanggal = null)
     {
-        $jamaah->kegiatan()->updateExistingPivot($kegiatan->id_kegiatan, [
-            'status_kehadiran' => $status,
-        ]);
-    }
-
-    /**
-     * Catat donasi yang dilakukan jamaah
-     */
-    public function catatDonasi(
-        Jamaah $jamaah,
-        Donasi $donasi,
-        float $jumlah,
-        ?string $tanggal = null
-    ): void {
-        $jamaah->donasi()->attach($donasi->id_donasi, [
-            'besar_donasi'   => $jumlah,
-            'tanggal_donasi' => $tanggal ?? now()->toDateString(),
+        // Menggunakan create langsung lebih aman untuk tabel transaksi
+        return RiwayatDonasi::create([
+            'id_jamaah' => $jamaah->id_jamaah,
+            'id_donasi' => $idDonasi,
+            'besar_donasi' => $jumlah,
+            'tanggal_donasi' => $tanggal ?? now()
         ]);
     }
 }

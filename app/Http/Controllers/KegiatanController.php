@@ -2,139 +2,46 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Jamaah;
 use App\Models\Kegiatan;
-use App\Services\KegiatanService;
+use App\Models\KeikutsertaanKegiatan;
 use Illuminate\Http\Request;
 
 class KegiatanController extends Controller
 {
-    public function __construct(
-        private KegiatanService $service
-    ) {}
-
     public function index()
     {
-        return response()->json($this->service->getAll());
-    }
+        // Ambil Master Data Kegiatan
+        $masterKegiatan = Kegiatan::latest('tanggal')->get();
 
-    public function show(int $id)
-    {
-        $kegiatan = $this->service->getById($id);
+        // Ambil Data Peserta/Presensi
+        $peserta = KeikutsertaanKegiatan::with(['jamaah', 'kegiatan'])
+                   ->latest('tanggal_daftar')
+                   ->get();
 
-        if (! $kegiatan) {
-            return response()->json(['message' => 'Kegiatan tidak ditemukan'], 404);
-        }
-
-        return response()->json($kegiatan);
+        return view('admin.kegiatan.index', compact('masterKegiatan', 'peserta'));
     }
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'nama_kategori'   => 'required|string|max:255',
-            'tanggal'         => 'required|date',
-            'lokasi'          => 'nullable|string',
-            'status_kegiatan' => 'nullable|string',
-            'deskripsi'       => 'nullable|string',
+        $request->validate([
+            'nama_kegiatan' => 'required', // Pastikan nama kolom di DB 'nama_kegiatan'
+            'tanggal' => 'required|date',
         ]);
 
-        $kegiatan = $this->service->create($data);
-
-        return response()->json($kegiatan, 201);
+        Kegiatan::create($request->all());
+        return back()->with('success', 'Kegiatan berhasil dibuat');
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, $id)
     {
-        $kegiatan = $this->service->getById($id);
-
-        if (! $kegiatan) {
-            return response()->json(['message' => 'Kegiatan tidak ditemukan'], 404);
-        }
-
-        $data = $request->validate([
-            'nama_kategori'   => 'sometimes|string|max:255',
-            'tanggal'         => 'sometimes|date',
-            'lokasi'          => 'nullable|string',
-            'status_kegiatan' => 'nullable|string',
-            'deskripsi'       => 'nullable|string',
-        ]);
-
-        $updated = $this->service->update($kegiatan, $data);
-
-        return response()->json($updated);
+        $kegiatan = Kegiatan::findOrFail($id);
+        $kegiatan->update($request->all());
+        return back()->with('success', 'Kegiatan diperbarui');
     }
 
-    public function destroy(int $id)
+    public function destroy($id)
     {
-        $kegiatan = $this->service->getById($id);
-
-        if (! $kegiatan) {
-            return response()->json(['message' => 'Kegiatan tidak ditemukan'], 404);
-        }
-
-        $this->service->delete($kegiatan);
-
-        return response()->json(null, 204);
-    }
-
-    // List peserta kegiatan
-    public function peserta(int $id)
-    {
-        $kegiatan = $this->service->getById($id);
-
-        if (! $kegiatan) {
-            return response()->json(['message' => 'Kegiatan tidak ditemukan'], 404);
-        }
-
-        return response()->json($this->service->getPeserta($kegiatan));
-    }
-
-    // Tambah peserta
-    public function tambahPeserta(Request $request, int $id)
-    {
-        $kegiatan = $this->service->getById($id);
-        if (! $kegiatan) {
-            return response()->json(['message' => 'Kegiatan tidak ditemukan'], 404);
-        }
-
-        $data = $request->validate([
-            'id_jamaah'      => 'required|integer|exists:jamaah,id_jamaah',
-            'tanggal_daftar' => 'nullable|date',
-        ]);
-
-        $jamaah = Jamaah::findOrFail($data['id_jamaah']);
-
-        $this->service->tambahPeserta(
-            $kegiatan,
-            $jamaah,
-            $data['tanggal_daftar'] ?? null
-        );
-
-        return response()->json(['message' => 'Peserta ditambahkan']);
-    }
-
-    // Ubah status kehadiran
-    public function ubahStatusKehadiran(Request $request, int $id)
-    {
-        $kegiatan = $this->service->getById($id);
-        if (! $kegiatan) {
-            return response()->json(['message' => 'Kegiatan tidak ditemukan'], 404);
-        }
-
-        $data = $request->validate([
-            'id_jamaah' => 'required|integer|exists:jamaah,id_jamaah',
-            'status'    => 'required|string',
-        ]);
-
-        $jamaah = Jamaah::findOrFail($data['id_jamaah']);
-
-        $this->service->ubahStatusKehadiran(
-            $kegiatan,
-            $jamaah,
-            $data['status']
-        );
-
-        return response()->json(['message' => 'Status kehadiran diperbarui']);
+        Kegiatan::destroy($id);
+        return back()->with('success', 'Kegiatan dihapus');
     }
 }

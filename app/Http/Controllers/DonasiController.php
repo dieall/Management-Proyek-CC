@@ -3,114 +3,46 @@
 namespace App\Http\Controllers;
 
 use App\Models\Donasi;
-use App\Models\Jamaah;
-use App\Services\DonasiService;
+use App\Models\RiwayatDonasi;
 use Illuminate\Http\Request;
 
 class DonasiController extends Controller
 {
-    public function __construct(
-        private DonasiService $service
-    ) {}
-
     public function index()
     {
-        return response()->json($this->service->getAll());
-    }
+        // Ambil data untuk Tab 1: Master Program
+        $masterDonasi = Donasi::latest('tanggal_mulai')->get();
+        
+        // Ambil data untuk Tab 2: Riwayat Transaksi (Eager Load Relasi)
+        $riwayatTransaksi = RiwayatDonasi::with(['jamaah', 'donasi'])
+                            ->latest('tanggal_donasi')
+                            ->get();
 
-    public function show(int $id)
-    {
-        $donasi = $this->service->getById($id);
-
-        if (! $donasi) {
-            return response()->json(['message' => 'Donasi tidak ditemukan'], 404);
-        }
-
-        return response()->json($donasi);
+        // Pastikan view ini ada di folder resources/views/admin/donasi/index.blade.php
+        return view('admin.donasi.index', compact('masterDonasi', 'riwayatTransaksi'));
     }
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'nama_donasi'    => 'required|string|max:255',
-            'tanggal_mulai'  => 'required|date',
-            'tanggal_selesai'=> 'nullable|date',
-            'deskripsi'      => 'nullable|string',
+        $request->validate([
+            'nama_donasi' => 'required',
+            'tanggal_mulai' => 'required|date',
         ]);
 
-        $donasi = $this->service->create($data);
-
-        return response()->json($donasi, 201);
+        Donasi::create($request->all());
+        return back()->with('success', 'Program Donasi dibuat');
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, $id)
     {
-        $donasi = $this->service->getById($id);
-
-        if (! $donasi) {
-            return response()->json(['message' => 'Donasi tidak ditemukan'], 404);
-        }
-
-        $data = $request->validate([
-            'nama_donasi'    => 'sometimes|string|max:255',
-            'tanggal_mulai'  => 'sometimes|date',
-            'tanggal_selesai'=> 'nullable|date',
-            'deskripsi'      => 'nullable|string',
-        ]);
-
-        $updated = $this->service->update($donasi, $data);
-
-        return response()->json($updated);
+        $donasi = Donasi::findOrFail($id);
+        $donasi->update($request->all());
+        return back()->with('success', 'Program Donasi diperbarui');
     }
 
-    public function destroy(int $id)
+    public function destroy($id)
     {
-        $donasi = $this->service->getById($id);
-
-        if (! $donasi) {
-            return response()->json(['message' => 'Donasi tidak ditemukan'], 404);
-        }
-
-        $this->service->delete($donasi);
-
-        return response()->json(null, 204);
-    }
-
-    // List jamaah yang pernah berdonasi
-    public function jamaah(int $id)
-    {
-        $donasi = $this->service->getById($id);
-
-        if (! $donasi) {
-            return response()->json(['message' => 'Donasi tidak ditemukan'], 404);
-        }
-
-        return response()->json($this->service->getJamaah($donasi));
-    }
-
-    // Catat donasi dari seorang jamaah
-    public function catatDonasi(Request $request, int $id)
-    {
-        $donasi = $this->service->getById($id);
-        if (! $donasi) {
-            return response()->json(['message' => 'Donasi tidak ditemukan'], 404);
-        }
-
-        $data = $request->validate([
-            'id_jamaah' => 'required|integer|exists:jamaah,id_jamaah',
-            'jumlah'    => 'required|numeric|min:0',
-            'tanggal'   => 'nullable|date',
-        ]);
-
-        $jamaah = Jamaah::findOrFail($data['id_jamaah']);
-
-        $this->service->catatDonasi(
-            $donasi,
-            $jamaah,
-            $data['jumlah'],
-            $data['tanggal'] ?? null
-        );
-
-        return response()->json(['message' => 'Donasi tercatat']);
+        Donasi::destroy($id);
+        return back()->with('success', 'Program dihapus');
     }
 }

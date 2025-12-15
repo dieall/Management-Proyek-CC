@@ -12,14 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('kategori_jamaah', function (Blueprint $table) {
-            $table->foreignId('id_jamaah')->constrained('jamaah')->cascadeOnDelete();
-            $table->foreignId('id_kategori')->constrained('kategori')->cascadeOnDelete();
+            // PERBAIKAN: Tambahkan parameter kedua 'id_jamaah' dan 'id_kategori'
+            $table->foreignId('id_jamaah')->constrained('jamaah', 'id_jamaah')->cascadeOnDelete();
+            $table->foreignId('id_kategori')->constrained('kategori', 'id_kategori')->cascadeOnDelete();
+            
             $table->boolean('status_aktif')->default(true);
             $table->string('periode')->nullable();
 
             $table->primary(['id_jamaah','id_kategori']);
         });
-
     }
 
     /**

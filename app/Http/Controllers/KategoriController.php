@@ -2,105 +2,63 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Jamaah;
 use App\Models\Kategori;
-use App\Services\KategoriService;
 use Illuminate\Http\Request;
 
 class KategoriController extends Controller
 {
-    public function __construct(
-        private KategoriService $service
-    ) {}
-
     public function index()
     {
-        return response()->json($this->service->getAll());
-    }
+        $kategori = Kategori::withCount('jamaah')
+            ->latest()
+            ->get();
 
-    public function show(int $id)
-    {
-        $kategori = $this->service->getById($id);
-
-        if (! $kategori) {
-            return response()->json(['message' => 'Kategori tidak ditemukan'], 404);
-        }
-
-        return response()->json($kategori);
+        return view('admin.kategori.index', compact('kategori'));
     }
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'nama_kategori' => 'required|string|max:255',
+        $validated = $request->validate([
+            'nama_kategori' => 'required|string|max:255|unique:kategori,nama_kategori',
             'deskripsi'     => 'nullable|string',
         ]);
 
-        $kategori = $this->service->create($data);
+        Kategori::create([
+            'nama_kategori' => $validated['nama_kategori'],
+            'deskripsi'     => $validated['deskripsi'] ?? null,
+        ]);
 
-        return response()->json($kategori, 201);
+        return back()->with('success', 'Kategori berhasil ditambahkan');
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, $id)
     {
-        $kategori = $this->service->getById($id);
+        $kategori = Kategori::findOrFail($id);
 
-        if (! $kategori) {
-            return response()->json(['message' => 'Kategori tidak ditemukan'], 404);
-        }
-
-        $data = $request->validate([
-            'nama_kategori' => 'sometimes|string|max:255',
+        $validated = $request->validate([
+            'nama_kategori' => 'required|string|max:255|unique:kategori,nama_kategori,' . $id . ',id_kategori',
             'deskripsi'     => 'nullable|string',
         ]);
 
-        $updated = $this->service->update($kategori, $data);
-
-        return response()->json($updated);
-    }
-
-    public function destroy(int $id)
-    {
-        $kategori = $this->service->getById($id);
-
-        if (! $kategori) {
-            return response()->json(['message' => 'Kategori tidak ditemukan'], 404);
-        }
-
-        $this->service->delete($kategori);
-
-        return response()->json(null, 204);
-    }
-
-    // Ambil semua jamaah di kategori ini
-    public function listJamaah(int $id)
-    {
-        $kategori = $this->service->getById($id);
-
-        if (! $kategori) {
-            return response()->json(['message' => 'Kategori tidak ditemukan'], 404);
-        }
-
-        return response()->json($this->service->getJamaah($kategori));
-    }
-
-    // Tambah jamaah ke kategori
-    public function tambahJamaah(Request $request, int $id)
-    {
-        $kategori = $this->service->getById($id);
-        if (! $kategori) {
-            return response()->json(['message' => 'Kategori tidak ditemukan'], 404);
-        }
-
-        $data = $request->validate([
-            'id_jamaah' => 'required|integer|exists:jamaah,id_jamaah',
-            'periode'   => 'nullable|string',
+        $kategori->update([
+            'nama_kategori' => $validated['nama_kategori'],
+            'deskripsi'     => $validated['deskripsi'] ?? null,
         ]);
 
-        $jamaah = Jamaah::findOrFail($data['id_jamaah']);
+        return back()->with('success', 'Kategori berhasil diperbarui');
+    }
 
-        $this->service->tambahJamaah($kategori, $jamaah, $data['periode'] ?? null);
+    public function destroy($id)
+    {
+        $kategori = Kategori::findOrFail($id);
 
-        return response()->json(['message' => 'Jamaah ditambahkan ke kategori']);
+        // Opsional pengaman:
+        // if ($kategori->jamaah()->count() > 0) {
+        //     return back()->with('error', 'Kategori masih digunakan jamaah');
+        // }
+
+        $kategori->delete();
+
+        return back()->with('success', 'Kategori berhasil dihapus');
     }
 }

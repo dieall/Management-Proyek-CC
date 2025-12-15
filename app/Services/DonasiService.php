@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Donasi;
 use App\Models\Jamaah;
+use App\Models\RiwayatDonasi;
 use Illuminate\Database\Eloquent\Collection;
 
 class DonasiService
@@ -34,30 +35,24 @@ class DonasiService
         $donasi->delete();
     }
 
-    /* =========================
-     *  LOGIC RELASI DONASI
-     * ========================= */
-
-    /**
-     * Ambil semua jamaah yang pernah berdonasi di campaign ini
-     */
     public function getJamaah(Donasi $donasi): Collection
     {
-        return $donasi->jamaah()->get();
+        // Mengambil data jamaah lewat relasi many-to-many
+        return $donasi->donatur()->get(); 
     }
 
-    /**
-     * Catat donasi dari jamaah tertentu
-     */
     public function catatDonasi(
         Donasi $donasi,
         Jamaah $jamaah,
         float $jumlah,
         ?string $tanggal = null
     ): void {
-        $donasi->jamaah()->attach($jamaah->id_jamaah, [
-            'besar_donasi'   => $jumlah,
-            'tanggal_donasi' => $tanggal ?? now()->toDateString(),
+        // FIX: Gunakan RiwayatDonasi model agar lebih aman & clean
+        RiwayatDonasi::create([
+            'id_jamaah' => $jamaah->id_jamaah,
+            'id_donasi' => $donasi->id_donasi,
+            'besar_donasi' => $jumlah,
+            'tanggal_donasi' => $tanggal ?? now(),
         ]);
     }
 }

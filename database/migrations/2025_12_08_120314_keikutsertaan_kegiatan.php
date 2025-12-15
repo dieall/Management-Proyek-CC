@@ -12,16 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('keikutsertaan_kegiatan', function (Blueprint $table) {
-            $table->foreignId('id_jamaah')->constrained('jamaah')->cascadeOnDelete();
-            $table->foreignId('id_kegiatan')->constrained('kegiatan')->cascadeOnDelete();
+            // PERBAIKAN:
+            $table->foreignId('id_jamaah')->constrained('jamaah', 'id_jamaah')->cascadeOnDelete();
+            $table->foreignId('id_kegiatan')->constrained('kegiatan', 'id_kegiatan')->cascadeOnDelete();
+            
             $table->date('tanggal_daftar')->nullable();
             $table->string('status_kehadiran')->default('belum');
 
             $table->primary(['id_jamaah','id_kegiatan']);
         });
-
     }
-
     /**
      * Reverse the migrations.
      */

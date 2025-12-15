@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('kegiatan', function (Blueprint $table) {
             $table->id('id_kegiatan');
-            $table->string('nama_kategori');
+            $table->string('nama_kegiatan');
             $table->date('tanggal');
             $table->string('lokasi')->nullable();
             $table->string('status_kegiatan')->default('aktif');

@@ -19,14 +19,23 @@ class Donasi extends Model
         'deskripsi',
     ];
 
-    protected $casts = [
-        'tanggal_mulai'   => 'date',
-        'tanggal_selesai' => 'date',
-    ];
+    // UPDATED: Modern Casting
+    protected function casts(): array
+    {
+        return [
+            'tanggal_mulai'   => 'date',
+            'tanggal_selesai' => 'date',
+        ];
+    }
 
-    public function jamaah()
+    public function donatur()
     {
         return $this->belongsToMany(Jamaah::class, 'riwayat_donasi', 'id_donasi', 'id_jamaah')
                     ->withPivot(['besar_donasi', 'tanggal_donasi']);
+    }
+
+    public function riwayatTransaksi()
+    {
+        return $this->hasMany(RiwayatDonasi::class, 'id_donasi', 'id_donasi');
     }
 }

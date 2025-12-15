@@ -13,16 +13,20 @@ class Kegiatan extends Model
     protected $primaryKey = 'id_kegiatan';
 
     protected $fillable = [
-        'nama_kategori',
+        'nama_kegiatan',
         'tanggal',
         'lokasi',
         'status_kegiatan',
         'deskripsi',
     ];
 
-    protected $casts = [
-        'tanggal' => 'date',
-    ];
+    // UPDATED: Modern Casting
+    protected function casts(): array
+    {
+        return [
+            'tanggal' => 'date',
+        ];
+    }
 
     public function jamaah()
     {
