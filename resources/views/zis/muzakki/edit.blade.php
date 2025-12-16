@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="bg-white rounded-lg shadow p-6">
-    <form action="{{ route('muzakki.update', $muzakki) }}" method="POST" class="space-y-6">
+    <form action="{{ route('admin.muzakki.update', $muzakki) }}" method="POST" class="space-y-6">
         @csrf
         @method('PUT')
 
@@ -42,7 +42,7 @@
             <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
                 <i class="fas fa-save mr-2"></i> Simpan
             </button>
-            <a href="{{ route('muzakki.show', $muzakki) }}" class="bg-gray-400 text-white px-6 py-2 rounded hover:bg-gray-500">
+            <a href="{{ route('admin.muzakki.show', $muzakki) }}" class="bg-gray-400 text-white px-6 py-2 rounded hover:bg-gray-500">
                 <i class="fas fa-times mr-2"></i> Batal
             </a>
         </div>

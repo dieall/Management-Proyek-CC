@@ -7,7 +7,7 @@
 <div class="bg-white rounded-lg shadow p-6 mb-6">
     <div class="flex justify-between items-center mb-4">
         <h3 class="text-lg font-semibold text-gray-800">Data Muzakki</h3>
-        <a href="{{ route('muzakki.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        <a href="{{ route('admin.muzakki.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
             <i class="fas fa-plus mr-2"></i> Tambah Muzakki
         </a>
     </div>
@@ -31,13 +31,13 @@
                         <td class="px-4 py-2 text-sm text-gray-700">{{ $item->no_hp ?? '-' }}</td>
                         <td class="px-4 py-2 text-sm text-gray-700">{{ Str::limit($item->alamat, 30) ?? '-' }}</td>
                         <td class="px-4 py-2 text-center text-sm">
-                            <a href="{{ route('muzakki.show', $item) }}" class="text-blue-600 hover:text-blue-800 mr-2">
+                            <a href="{{ route('admin.muzakki.show', $item) }}" class="text-blue-600 hover:text-blue-800 mr-2">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a href="{{ route('muzakki.edit', $item) }}" class="text-yellow-600 hover:text-yellow-800 mr-2">
+                            <a href="{{ route('admin.muzakki.edit', $item) }}" class="text-yellow-600 hover:text-yellow-800 mr-2">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <form action="{{ route('muzakki.destroy', $item) }}" method="POST" class="inline" onsubmit="return confirm('Yakin?')">
+                            <form action="{{ route('admin.muzakki.destroy', $item) }}" method="POST" class="inline" onsubmit="return confirm('Yakin?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 hover:text-red-800">

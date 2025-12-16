@@ -1,0 +1,53 @@
+@extends('layouts.app')
+
+@section('title', 'Riwayat Donasi ZIS')
+@section('page_title', 'Riwayat ZIS Anda')
+
+@section('content')
+<div class="bg-white p-8 rounded-lg shadow-lg">
+    <h3 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-3">
+        Riwayat Semua Transaksi ZIS
+    </h3>
+    
+    <div class="mb-4 p-4 bg-green-50 border border-green-200 rounded">
+        <p class="font-semibold text-green-800">Total ZIS Terkumpul: 
+            Rp {{ number_format($muzakki->zismasuk()->sum('jumlah') ?? 0, 0, ',', '.') }}
+        </p>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID ZIS</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis ZIS</th>
+                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah (Rp)</th>
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                @forelse($donasi as $item)
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">#{{ $item->id_zis }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ \Carbon\Carbon::parse($item->tgl_masuk)->format('d M Y') }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ ucfirst($item->jenis_zis) }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-green-600 font-semibold">Rp {{ number_format($item->jumlah, 0, ',', '.') }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-xs truncate">{{ $item->keterangan ?? '-' }}</td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">Belum ada riwayat transaksi ZIS yang ditemukan.</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-8 text-right">
+        <a href="{{ route('muzakki.dashboard') }}" class="inline-block bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">
+            <i class="fas fa-arrow-left mr-2"></i> Kembali
+        </a>
+    </div>
+</div>
+@endsection

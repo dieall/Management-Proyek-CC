@@ -44,7 +44,7 @@ class MuzakkiController extends Controller
 
         Muzakki::create($validated);
 
-        return redirect()->route('muzakki.index')
+        return redirect()->route('admin.muzakki.index')
             ->with('success', 'Data muzakki berhasil ditambahkan');
     }
 
@@ -85,7 +85,7 @@ class MuzakkiController extends Controller
 
         $muzakki->update($validated);
 
-        return redirect()->route('muzakki.show', $muzakki)
+        return redirect()->route('admin.muzakki.show', $muzakki)
             ->with('success', 'Data muzakki berhasil diperbarui');
     }
 
@@ -96,7 +96,7 @@ class MuzakkiController extends Controller
     {
         $muzakki->delete();
 
-        return redirect()->route('muzakki.index')
+        return redirect()->route('admin.muzakki.index')
             ->with('success', 'Data muzakki berhasil dihapus');
     }
 }

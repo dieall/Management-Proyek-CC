@@ -87,17 +87,17 @@
             <h3 class="text-lg font-semibold text-gray-800 mb-4">Aksi</h3>
             
             <div class="space-y-2">
-                <a href="{{ route('zis.masuk.edit', $zisMasuk) }}" class="block w-full text-center bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700">
+                <a href="{{ route('admin.zis.masuk.edit', $zisMasuk) }}" class="block w-full text-center bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700">
                     <i class="fas fa-edit mr-2"></i> Edit
                 </a>
-                <form action="{{ route('zis.masuk.destroy', $zisMasuk) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus?')">
+                <form action="{{ route('admin.zis.masuk.destroy', $zisMasuk) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus?')">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="w-full bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
                         <i class="fas fa-trash mr-2"></i> Hapus
                     </button>
                 </form>
-                <a href="{{ route('zis.masuk.index') }}" class="block w-full text-center bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">
+                <a href="{{ route('admin.zis.masuk.index') }}" class="block w-full text-center bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">
                     <i class="fas fa-arrow-left mr-2"></i> Kembali
                 </a>
             </div>

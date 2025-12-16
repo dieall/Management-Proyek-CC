@@ -75,17 +75,17 @@
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold text-gray-800 mb-4">Aksi</h3>
             <div class="space-y-2">
-                <a href="{{ route('mustahik.edit', $mustahik) }}" class="block w-full text-center bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700">
+                <a href="{{ route('admin.mustahik.edit', $mustahik) }}" class="block w-full text-center bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700">
                     <i class="fas fa-edit mr-2"></i> Edit
                 </a>
-                <form action="{{ route('mustahik.destroy', $mustahik) }}" method="POST" onsubmit="return confirm('Yakin?')">
+                <form action="{{ route('admin.mustahik.destroy', $mustahik) }}" method="POST" onsubmit="return confirm('Yakin?')">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="w-full bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
                         <i class="fas fa-trash mr-2"></i> Hapus
                     </button>
                 </form>
-                <a href="{{ route('mustahik.index') }}" class="block w-full text-center bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">
+                <a href="{{ route('admin.mustahik.index') }}" class="block w-full text-center bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">
                     <i class="fas fa-arrow-left mr-2"></i> Kembali
                 </a>
             </div>

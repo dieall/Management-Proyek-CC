@@ -16,7 +16,7 @@ class PenyaluranController extends Controller
      */
     public function index(): View
     {
-        $penyaluran = Penyaluran::with(['zismasuk.muzakki', 'mustahik'])
+        $penyaluran = Penyaluran::with(['zisMasuk.muzakki', 'mustahik']) // DIPERBAIKI: zisMasuk
             ->orderBy('tgl_salur', 'desc')
             ->paginate(10);
 
@@ -56,7 +56,7 @@ class PenyaluranController extends Controller
 
         Penyaluran::create($validated);
 
-        return redirect()->route('penyaluran.index')
+        return redirect()->route('admin.penyaluran.index')
             ->with('success', 'Data penyaluran berhasil ditambahkan');
     }
 
@@ -65,10 +65,9 @@ class PenyaluranController extends Controller
      */
     public function show(Penyaluran $penyaluran): View
     {
-        $penyaluran->load('zismasuk.muzakki', 'mustahik');
+        $penyaluran->load('zisMasuk.muzakki', 'mustahik'); // DIPERBAIKI: zisMasuk
         return view('zis.penyaluran.show', compact('penyaluran'));
     }
-
     /**
      * Show the form for editing the specified penyaluran.
      */
@@ -95,7 +94,7 @@ class PenyaluranController extends Controller
 
         $penyaluran->update($validated);
 
-        return redirect()->route('penyaluran.show', $penyaluran)
+        return redirect()->route('admin.penyaluran.show', $penyaluran)
             ->with('success', 'Data penyaluran berhasil diperbarui');
     }
 
@@ -106,7 +105,7 @@ class PenyaluranController extends Controller
     {
         $penyaluran->delete();
 
-        return redirect()->route('penyaluran.index')
+        return redirect()->route('admin.penyaluran.index')
             ->with('success', 'Data penyaluran berhasil dihapus');
     }
 }

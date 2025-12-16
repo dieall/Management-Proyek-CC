@@ -59,18 +59,36 @@
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold text-gray-800 mb-4">Aksi</h3>
             <div class="space-y-2">
-                <a href="{{ route('muzakki.edit', $muzakki) }}" class="block w-full text-center bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700">
+                <a href="{{ route('admin.muzakki.edit', $muzakki) }}" class="block w-full text-center bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
                     <i class="fas fa-edit mr-2"></i> Edit
                 </a>
-                <form action="{{ route('muzakki.destroy', $muzakki) }}" method="POST" onsubmit="return confirm('Yakin?')">
+                
+                {{-- Tombol Setujui Muzakki (jika status menunggu) --}}
+                @if($muzakki->status_pendaftaran === 'menunggu')
+                <form action="{{ route('admin.muzakki.approve', $muzakki->id_muzakki) }}" method="POST" onsubmit="return confirm('Setujui pendaftaran Muzakki ini?')" class="block">
                     @csrf
-                    @method('DELETE')
-                    <button type="submit" class="w-full bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
-                        <i class="fas fa-trash mr-2"></i> Hapus
+                    <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition font-medium">
+                        <i class="fas fa-check mr-2"></i> Setujui Pendaftaran
                     </button>
                 </form>
-                <a href="{{ route('muzakki.index') }}" class="block w-full text-center bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">
-                    <i class="fas fa-arrow-left mr-2"></i> Kembali
+                @else
+                <div class="w-full bg-gray-200 text-gray-700 px-4 py-2 rounded text-center text-sm">
+                    <i class="fas fa-check-circle mr-2"></i>Status: {{ ucfirst($muzakki->status_pendaftaran) }}
+                </div>
+                @endif
+                
+                {{-- Tombol Tolak (Hapus Data) --}}
+                <form action="{{ route('admin.muzakki.destroy', $muzakki) }}" method="POST" onsubmit="return confirm('Tolak dan hapus data Muzakki ini? Tindakan ini tidak bisa dibatalkan.')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="w-full bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition font-medium">
+                        <i class="fas fa-times mr-2"></i> Tolak Pendaftaran
+                    </button>
+                </form>
+                
+                {{-- Tombol Kembali ke Dashboard --}}
+                <a href="{{ route('admin.dashboard') }}" class="block w-full text-center bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition">
+                    <i class="fas fa-arrow-left mr-2"></i> Kembali ke Dashboard
                 </a>
             </div>
         </div>

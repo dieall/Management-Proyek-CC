@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+// Import Model Muzakki
+use App\Models\Muzakki; 
 
 class User extends Authenticatable
 {
@@ -60,5 +62,11 @@ class User extends Authenticatable
     {
         return $this->hasOne(PetugasZis::class, 'id_user');
     }
+    
+    // **RELASI BARU: Diperlukan untuk Pendaftaran Muzakki**
+    public function muzakkiProfile()
+    {
+        // Relasi 1-ke-1, menggunakan kolom 'user_id' di tabel 'muzakki'
+        return $this->hasOne(Muzakki::class, 'user_id', 'id'); 
+    }
 }
-
