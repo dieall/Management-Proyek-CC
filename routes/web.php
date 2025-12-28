@@ -129,8 +129,6 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
 
         return view('dashboard-bootstrap', compact('stats', 'terbaruDonasi', 'kegiatanTerdekat'));
     })->name('dashboard');
-        
-    })->name('dashboard');
 
     // CRUD Resources
     Route::resource('jamaah', JamaahController::class);

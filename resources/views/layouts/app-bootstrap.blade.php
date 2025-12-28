@@ -54,32 +54,32 @@
             </div>
 
             <!-- Nav Item - Jamaah -->
-            <li class="nav-item {{ request()->is('admin/jamaah*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('admin.jamaah.index') }}">
+            <li class="nav-item {{ request()->is('jamaah*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('jamaah.index') }}">
                     <i class="fas fa-fw fa-users"></i>
                     <span>Data Jamaah</span>
                 </a>
             </li>
 
             <!-- Nav Item - Kategori -->
-            <li class="nav-item {{ request()->is('admin/kategori*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('admin.kategori.index') }}">
+            <li class="nav-item {{ request()->is('kategori*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('kategori.index') }}">
                     <i class="fas fa-fw fa-tags"></i>
                     <span>Kategori Jamaah</span>
                 </a>
             </li>
 
             <!-- Nav Item - Kegiatan -->
-            <li class="nav-item {{ request()->is('admin/kegiatan*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('admin.kegiatan.index') }}">
+            <li class="nav-item {{ request()->is('kegiatan*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('kegiatan.index') }}">
                     <i class="fas fa-fw fa-calendar-alt"></i>
                     <span>Kegiatan</span>
                 </a>
             </li>
 
             <!-- Nav Item - Donasi -->
-            <li class="nav-item {{ request()->is('admin/donasi*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('admin.donasi.index') }}">
+            <li class="nav-item {{ request()->is('donasi*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('donasi.index') }}">
                     <i class="fas fa-fw fa-hand-holding-usd"></i>
                     <span>Donasi</span>
                 </a>
