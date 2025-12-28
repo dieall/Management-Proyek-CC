@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.app-bootstrap')
 
-@section('header_title', 'Profil Saya')
+@section('title', 'Profil Saya')
 
 @section('content')
 <div class="max-w-4xl mx-auto pb-10">

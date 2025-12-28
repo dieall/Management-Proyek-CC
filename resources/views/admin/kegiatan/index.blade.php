@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.app-bootstrap')
 
-@section('header_title', 'Manajemen Kegiatan')
+@section('title', 'Manajemen Kegiatan')
 
 @section('content')
 <div

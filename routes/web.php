@@ -127,29 +127,8 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
                             ->take(3)
                             ->get();
 
-        return view('dashboard', compact('stats', 'terbaruDonasi', 'kegiatanTerdekat'));
-    })->name('dashboard');
-
-    // Dashboard Bootstrap (Demo/Testing)
-    Route::get('/dashboard-bootstrap', function () {
-        $stats = [
-            'total_jamaah' => User::count(),
-            'total_donasi' => RiwayatDonasi::sum('besar_donasi'),
-            'kegiatan_aktif' => Kegiatan::where('status_kegiatan', 'aktif')->count(),
-        ];
-
-        $terbaruDonasi = RiwayatDonasi::with(['jamaah', 'donasi'])
-                         ->latest('tanggal_donasi')
-                         ->take(5)
-                         ->get();
-
-        $kegiatanTerdekat = Kegiatan::where('status_kegiatan', 'aktif')
-                            ->whereDate('tanggal', '>=', now())
-                            ->orderBy('tanggal', 'asc')
-                            ->take(3)
-                            ->get();
-
         return view('dashboard-bootstrap', compact('stats', 'terbaruDonasi', 'kegiatanTerdekat'));
+    })->name('dashboard');
         
     })->name('dashboard');
 

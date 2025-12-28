@@ -1,4 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.app-bootstrap')
+
+@section('title', 'Manajemen Donasi')
 
 @section('content')
 <div
