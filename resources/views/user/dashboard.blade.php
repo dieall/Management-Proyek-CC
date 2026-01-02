@@ -144,7 +144,11 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap font-semibold text-gray-800">
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-blue-100 text-blue-800">
-                                        {{ ucfirst($item->jenis_zis) }}
+                                        @if($item->jenis_zis == 'zakat') Zakat
+                                        @elseif($item->jenis_zis == 'infaq') Infak
+                                        @elseif($item->jenis_zis == 'shadaqah') Sedekah
+                                        @else {{ ucfirst($item->jenis_zis) }}
+                                        @endif
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $item->sub_jenis_zis ?? '-' }}</td>

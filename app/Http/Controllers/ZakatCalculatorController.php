@@ -10,30 +10,41 @@ class ZakatCalculatorController extends Controller
 {
     public function index(): View|RedirectResponse
     {
-        $user = Auth::user()->load('muzakkiProfile');
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        
+        // Cek Login & Status Muzakki
+        $user->load('muzakkiProfile');
         $muzakkiProfile = $user->muzakkiProfile;
 
-        // Cek Persetujuan Admin
         if (!$muzakkiProfile || $muzakkiProfile->status_pendaftaran !== 'disetujui') {
-             return redirect()->route('user.dashboard')->with('error', 'Akses kalkulator dibatasi untuk Muzakki yang sudah disetujui.');
+             return redirect()->route('user.dashboard')
+                ->with('error', 'Akses kalkulator dibatasi.');
         }
 
-        // --- Data Kalkulator ---
+        // --- KONFIGURASI ZAKAT ---
+        
         $fitrahAmount = [
-            'beras_kg' => '3.5 liter',
+            'beras_kg' => '3.5 liter / 2.5 kg',
             'uang_rp' => 55000, 
         ];
 
-        // Nishab Emas Bulanan (Contoh nilai tetap)
-        $nishab = 17585076; 
-        
-        // Data Sub-Jenis Zakat Maal
-        $subJenisZakatMaal = [
-            'Zakat Emas', 'Zakat Penghasilan', 'Zakat Tabungan', 'Zakat Perak', 
-            'Zakat Perhiasan Perak', 'Zakat Perindustrian', 'Zakat Hasil Perniagaan', 
-            'Zakat Pertambangan Emas', 'Zakat Pertambangan Perak', 'Zakat Perusahaan',
-        ];
+        // HARGA EMAS SAAT INI (Update berkala/ambil dari API)
+        // Misal: Rp 1.300.000 per gram
+        $hargaEmasPerGram = 1300000; 
 
-        return view('user.kalkulator.index', compact('fitrahAmount', 'nishab', 'subJenisZakatMaal'));
+        // 1. Nishab Tahunan (Untuk Zakat Maal/Harta Simpanan) -> 85 gram emas
+        $nishabTahun = 85 * $hargaEmasPerGram; 
+        
+        // 2. Nishab Bulanan (Untuk Zakat Penghasilan) -> Nishab Tahun / 12 bulan
+        // SK BAZNAS biasanya menggunakan pendekatan ini atau setara 653kg beras
+        $nishabBulan = $nishabTahun / 12;
+
+        return view('user.kalkulator.index', compact(
+            'fitrahAmount', 
+            'nishabTahun', 
+            'nishabBulan',
+            'hargaEmasPerGram'
+        ));
     }
 }

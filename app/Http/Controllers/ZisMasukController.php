@@ -14,32 +14,94 @@ class ZisMasukController extends Controller
     /**
      * Display a listing of the ZIS masuk.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $query = ZisMasuk::with('muzakki')->orderBy('tgl_masuk', 'desc');
+        $query = ZisMasuk::with('muzakki');
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         $userRole = $user->role;
 
+        // Get filter parameters
+        $month = $request->input('month');
+        $jenisZis = $request->input('jenis_zis');
+        $search = $request->input('search');
+
         if ($userRole === 'admin') {
-            // Admin bisa lihat semua ZIS Masuk
-            $zisMasuk = $query->paginate(10);
+            // --- LOGIKA ADMIN ---
+            
+            // Apply filters
+            if ($month) {
+                $query->whereMonth('tgl_masuk', $month);
+            }
+            if ($jenisZis) {
+                $query->where('jenis_zis', $jenisZis);
+            }
+            if ($search) {
+                $query->whereHas('muzakki', function($q) use ($search) {
+                    $q->where('nama', 'like', '%' . $search . '%');
+                });
+            }
+
+            // PERBAIKAN DI SINI:
+            // Urutkan berdasarkan Waktu Input (Terbaru ke Terlama)
+            $query->orderBy('created_at', 'desc');
+
+            $zisMasuk = $query->paginate(10)->appends($request->query());
+            
+            // Get summary based on filters
+            $summaryQuery = ZisMasuk::with('muzakki');
+            if ($month) $summaryQuery->whereMonth('tgl_masuk', $month);
+            if ($jenisZis) $summaryQuery->where('jenis_zis', $jenisZis);
+            if ($search) $summaryQuery->whereHas('muzakki', function($q) use ($search) {
+                $q->where('nama', 'like', '%' . $search . '%');
+            });
+            
+            $totalZis = $summaryQuery->sum('jumlah');
+            $countZis = $summaryQuery->count();
+            
             $view = 'zis.masuk.index'; 
+
         } else {
-            // User/Jemaah: Hanya lihat pembayaran mereka sendiri
+            // --- LOGIKA USER/JEMAAH ---
+            
             $user->load('muzakkiProfile');
             $muzakkiProfile = $user->muzakkiProfile;
             
             if ($muzakkiProfile) {
                 $muzakkiId = $muzakkiProfile->id_muzakki;
-                $zisMasuk = $query->where('id_muzakki', $muzakkiId)->paginate(10);
+                $query = $query->where('id_muzakki', $muzakkiId);
+                
+                // Apply filters
+                if ($month) {
+                    $query->whereMonth('tgl_masuk', $month);
+                }
+                if ($jenisZis) {
+                    $query->where('jenis_zis', $jenisZis);
+                }
+                
+                // PERBAIKAN DI SINI JUGA:
+                // Agar user juga melihat transaksi yang baru mereka lakukan di paling atas
+                $query->orderBy('created_at', 'desc');
+
+                $zisMasuk = $query->paginate(10)->appends($request->query());
+                
+                // Get summary
+                $summaryQuery = ZisMasuk::where('id_muzakki', $muzakkiId);
+                if ($month) $summaryQuery->whereMonth('tgl_masuk', $month);
+                if ($jenisZis) $summaryQuery->where('jenis_zis', $jenisZis);
+                
+                $totalZis = $summaryQuery->sum('jumlah');
+                $countZis = $summaryQuery->count();
             } else {
-                // Jika belum punya profil Muzakki, tampilkan pesan
-                $zisMasuk = collect(); // Kosongkan data
+                // Jika belum punya profil Muzakki
+                $zisMasuk = collect(); 
+                $totalZis = 0;
+                $countZis = 0;
             }
             $view = 'user.pembayaran.index';
         }
 
-        return view($view, compact('zisMasuk'));
+        return view($view, compact('zisMasuk', 'totalZis', 'countZis', 'month', 'jenisZis', 'search'));
     }
 
     /**

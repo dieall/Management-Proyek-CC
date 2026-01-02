@@ -92,9 +92,25 @@ class MustahikController extends Controller
             'alamat' => 'nullable|string',
             'kategori_mustahik' => 'required|in:fakir,miskin,amil,muallaf,riqab,gharim,fisabillillah,ibnu sabil',
             'no_hp' => 'nullable|string|max:20',
-            'surat_dtks' => 'nullable|string|max:255',
-            // 'status' dihapus/diabaikan
+            'surat_dtks' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048', // 2MB max
         ]);
+
+        // Handle file upload untuk DTKS
+        if ($request->hasFile('surat_dtks')) {
+            // Hapus file lama jika ada
+            if ($mustahik->surat_dtks && Storage::disk('public')->exists($mustahik->surat_dtks)) {
+                Storage::disk('public')->delete($mustahik->surat_dtks);
+            }
+
+            // Upload file baru
+            $file = $request->file('surat_dtks');
+            $fileName = 'mustahik_dtks/' . time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('mustahik_dtks', basename($fileName), 'public');
+            $validated['surat_dtks'] = $fileName;
+        } else {
+            // Jika tidak ada file baru, hapus key surat_dtks dari validated
+            unset($validated['surat_dtks']);
+        }
 
         $mustahik->update($validated);
 

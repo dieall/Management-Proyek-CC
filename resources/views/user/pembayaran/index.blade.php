@@ -61,11 +61,15 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold 
-                                    @if($zis->jenis_zis == 'Zakat') bg-blue-100 text-blue-800
-                                    @elseif($zis->jenis_zis == 'Infak') bg-purple-100 text-purple-800
+                                    @if($zis->jenis_zis == 'zakat') bg-blue-100 text-blue-800
+                                    @elseif($zis->jenis_zis == 'infaq') bg-purple-100 text-purple-800
                                     @else bg-orange-100 text-orange-800
                                     @endif">
-                                    {{ ucfirst($zis->jenis_zis) }}
+                                    @if($zis->jenis_zis == 'zakat') Zakat
+                                    @elseif($zis->jenis_zis == 'infaq') Infak
+                                    @elseif($zis->jenis_zis == 'shadaqah') Sedekah
+                                    @else {{ ucfirst($zis->jenis_zis) }}
+                                    @endif
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">

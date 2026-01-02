@@ -1,106 +1,110 @@
 @extends('layouts.app')
 
 @section('title', 'Kalkulator Zakat Akurat')
-@section('page_title', 'Hitung Zakat Anda dengan Akurat')
 
 @section('content')
-<div class="space-y-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     {{-- HEADER --}}
-    <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-2xl p-8 shadow-lg">
-        <h1 class="text-4xl font-bold mb-2 flex items-center">
-            <i class="fas fa-calculator mr-3"></i>Kalkulator Zakat
-        </h1>
-        <p class="text-indigo-100">Hitung kewajibanatan zakat Anda dengan mudah dan akurat</p>
+    <div class="bg-gradient-to-r from-indigo-600 to-indigo-800 text-white rounded-2xl p-8 shadow-xl mb-8 relative overflow-hidden">
+        <div class="relative z-10">
+            <h1 class="text-4xl font-extrabold mb-2 flex items-center">
+                <i class="fas fa-calculator mr-4 opacity-80"></i>Kalkulator Zakat
+            </h1>
+            <p class="text-indigo-100 text-lg max-w-2xl">Hitung kewajiban zakat Anda dengan mudah, transparan, dan sesuai syariat.</p>
+        </div>
+        {{-- Hiasan Background --}}
+        <div class="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl"></div>
     </div>
 
     {{-- TABS NAVIGATION --}}
-    <div class="bg-white rounded-xl shadow-md p-1">
-        <div class="flex gap-2" id="zakat-type-tabs">
-            <button type="button" data-zakat-type="fitrah" class="zakat-tab-button flex-1 px-4 py-4 text-lg font-bold rounded-lg transition 
-                border-b-4 border-blue-500 text-blue-600 bg-blue-50">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-2 mb-8">
+        <div class="flex flex-col sm:flex-row gap-2" id="zakat-type-tabs">
+            <button type="button" data-zakat-type="fitrah" class="zakat-tab-button flex-1 px-6 py-4 text-lg font-bold rounded-lg transition-all duration-300 border-b-4 border-blue-500 text-blue-700 bg-blue-50 shadow-inner">
                 <i class="fas fa-dove mr-2"></i>Zakat Fitrah
             </button>
-            <button type="button" data-zakat-type="maal" class="zakat-tab-button flex-1 px-4 py-4 text-lg font-bold rounded-lg transition 
-                border-b-4 border-transparent text-gray-600 hover:bg-gray-50">
+            <button type="button" data-zakat-type="maal" class="zakat-tab-button flex-1 px-6 py-4 text-lg font-bold rounded-lg transition-all duration-300 border-b-4 border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-700">
                 <i class="fas fa-wallet mr-2"></i>Zakat Maal
             </button>
         </div>
     </div>
 
     {{-- CONTENT CONTAINER --}}
-    <div id="zakat-content-container" class="space-y-8">
+    <div id="zakat-content-container" class="transition-all duration-500">
 
-        {{-- ZAKAT FITRAH SECTION --}}
-        <div id="fitrah-content" class="zakat-content">
+        {{-- 1. ZAKAT FITRAH SECTION --}}
+        <div id="fitrah-content" class="zakat-content animate-fade-in-up">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {{-- INPUT AREA --}}
-                <div class="bg-white rounded-xl shadow-md p-8">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                        <i class="fas fa-input-numeric text-indigo-600 mr-3"></i>Data Peserta
+                <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center pb-4 border-b border-gray-100">
+                        <i class="fas fa-user-group text-indigo-500 mr-3"></i>Data Peserta
                     </h3>
                     
-                    <div class="space-y-4">
+                    <div class="space-y-6">
                         <div>
                             <label for="fitrah_jumlah_peserta" class="block text-sm font-bold text-gray-700 mb-2">
-                                <i class="fas fa-people-group text-indigo-500 mr-2"></i>Jumlah Peserta
+                                Jumlah Jiwa
                             </label>
-                            <input type="number" id="fitrah_jumlah_peserta" value="1" min="1" class="w-full py-3 px-4 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition text-lg font-semibold">
-                        </div>
-                        
-                        <div>
-                            <label for="nama_peserta" class="block text-sm font-bold text-gray-700 mb-2">
-                                <i class="fas fa-list text-indigo-500 mr-2"></i>Nama Peserta (Opsional)
-                            </label>
-                            <textarea id="nama_peserta" rows="4" placeholder="Contoh:&#10;- Suami&#10;- Istri&#10;- Anak 1&#10;- Anak 2" class="w-full py-3 px-4 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition text-sm"></textarea>
+                            <div class="relative">
+                                <input type="number" id="fitrah_jumlah_peserta" value="1" min="1" class="w-full pl-4 pr-12 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-500 focus:ring-0 transition text-xl font-bold text-gray-800">
+                                <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                                    <span class="text-gray-400 font-semibold">Orang</span>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 p-6 rounded-lg border-2 border-indigo-200">
-                            <p class="text-sm text-gray-700 font-semibold mb-2">Besar Zakat Fitrah Per Jiwa:</p>
-                            <p class="text-4xl font-extrabold text-indigo-700 mb-3">Rp {{ number_format($fitrahAmount['uang_rp'], 0, ',', '.') }}</p>
-                            <p class="text-xs text-gray-600">
-                                <i class="fas fa-info-circle mr-1"></i>
-                                Setara dengan beras {{ $fitrahAmount['beras_kg'] }}
+                        <div class="bg-blue-50 p-6 rounded-xl border border-blue-100">
+                            <p class="text-sm text-blue-800 font-semibold mb-1">Besaran Zakat per Jiwa</p>
+                            <div class="flex items-end gap-2">
+                                <p class="text-3xl font-extrabold text-blue-700">Rp {{ number_format($fitrahAmount['uang_rp'], 0, ',', '.') }}</p>
+                                <span class="text-sm text-blue-600 mb-1">/ orang</span>
+                            </div>
+                            <p class="text-xs text-blue-500 mt-2 flex items-center">
+                                <i class="fas fa-info-circle mr-1"></i> Setara 3.5 Liter / 2.5 Kg Beras
                             </p>
                         </div>
                     </div>
                 </div>
 
                 {{-- OUTPUT AREA --}}
-                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-md p-8 border-2 border-blue-300 flex flex-col justify-between">
-                    <div>
-                        <h4 class="text-2xl font-bold text-blue-900 mb-4 flex items-center">
-                            <i class="fas fa-calculator text-blue-600 mr-2"></i>Total Kewajiban
-                        </h4>
-                        <p class="text-sm text-blue-700 font-semibold mb-2">Jumlah yang harus dibayar:</p>
-                        <p id="total_zakat_fitrah" class="text-5xl font-extrabold text-blue-700 mb-6">Rp 55.000</p>
-                        <input type="hidden" id="total_zakat_fitrah_value" value="{{ $fitrahAmount['uang_rp'] }}">
+                <div class="bg-indigo-900 rounded-xl shadow-lg p-8 text-white flex flex-col justify-between relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h4 class="text-xl font-medium text-indigo-200 mb-2">Total Zakat Fitrah</h4>
+                        <p id="total_zakat_fitrah" class="text-5xl font-extrabold text-white tracking-tight mb-8">Rp 55.000</p>
+                        
+                        <div class="bg-white/10 rounded-lg p-4 backdrop-blur-sm border border-white/10 mb-6">
+                            <p class="text-sm text-indigo-100">"Rasulullah SAW mewajibkan zakat fitrah untuk menyucikan orang yang berpuasa dari perkataan sia-sia dan keji..." (HR. Abu Daud)</p>
+                        </div>
                     </div>
                     
-                    <button onclick="copyToPayment('Zakat Fitrah Uang', document.getElementById('total_zakat_fitrah_value').value)" 
-                            class="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-4 rounded-lg hover:from-green-700 hover:to-green-800 transition font-bold text-lg flex items-center justify-center shadow-lg hover:shadow-xl">
-                        <i class="fas fa-arrow-right mr-2"></i>Bayar Sekarang
+                    <input type="hidden" id="total_zakat_fitrah_value" value="{{ $fitrahAmount['uang_rp'] }}">
+                    
+                    <button onclick="globalPay('Zakat Fitrah', document.getElementById('total_zakat_fitrah_value').value)" 
+                            class="relative z-10 w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-green-500/30 transition-all transform hover:-translate-y-1 flex items-center justify-center group">
+                        Bayar Sekarang <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
                     </button>
+                    
+                    {{-- Decoration --}}
+                    <div class="absolute bottom-0 right-0 w-48 h-48 bg-indigo-500 opacity-20 rounded-full blur-2xl -mr-10 -mb-10"></div>
                 </div>
             </div>
         </div>
 
-        {{-- ZAKAT MAAL SECTION --}}
-        <div id="maal-content" class="zakat-content hidden">
-            {{-- SUB TABS --}}
-            <div class="bg-white rounded-xl shadow-md p-1 mb-8">
-                <div class="flex gap-2" id="maal-sub-tabs">
-                    <button type="button" data-maal-type="penghasilan" class="maal-tab-button flex-1 px-4 py-4 text-lg font-bold rounded-lg transition 
-                        border-b-4 border-purple-500 text-purple-600 bg-purple-50">
-                        <i class="fas fa-hand-holding-usd mr-2"></i>Penghasilan
+        {{-- 2. ZAKAT MAAL SECTION --}}
+        <div id="maal-content" class="zakat-content hidden animate-fade-in-up">
+            {{-- SUB TABS MAAL --}}
+            <div class="flex justify-center mb-8">
+                <div class="bg-gray-100 p-1 rounded-lg inline-flex shadow-inner">
+                    <button type="button" data-maal-type="penghasilan" class="maal-tab-button px-6 py-2 text-sm font-bold rounded-md transition-all shadow-sm bg-white text-purple-700">
+                        <i class="fas fa-money-bill-wave mr-2"></i>Penghasilan
                     </button>
-                    <button type="button" data-maal-type="harta" class="maal-tab-button flex-1 px-4 py-4 text-lg font-bold rounded-lg transition 
-                        border-b-4 border-transparent text-gray-600 hover:bg-gray-50">
-                        <i class="fas fa-coins mr-2"></i>Harta
+                    <button type="button" data-maal-type="harta" class="maal-tab-button px-6 py-2 text-sm font-bold rounded-md transition-all text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-gem mr-2"></i>Simpanan/Harta
                     </button>
                 </div>
             </div>
 
-            {{-- MAAL CONTENT CONTAINER --}}
+            {{-- MAAL FORMS --}}
             <div id="maal-inner-container">
                 <div id="penghasilan-form" class="maal-inner-content">
                     @include('user.kalkulator.maal_penghasilan')
@@ -112,129 +116,90 @@
         </div>
     </div>
 </div>
-
 @endsection
+
+{{-- BAGIAN ATAS VIEW TETAP SAMA, HANYA UPDATE SCRIPT DI BAWAH INI --}}
 
 @push('scripts')
 <script>
-    const fitrahAmount = @json($fitrahAmount);
-    const nishab = @json($nishab);
+    // --- 1. CONFIGURATION & HELPERS (GLOBAL) ---
+    window.ZakatConfig = {
+        fitrahPerSoul: {{ $fitrahAmount['uang_rp'] }},
+        // Terima 2 jenis nishab dari controller
+        nishabMaalTahun: {{ $nishabTahun }}, 
+        nishabPenghasilanBulan: {{ $nishabBulan }},
+        paymentUrl: '{{ route('user.pembayaran.create') }}'
+    };
 
-    function formatRupiah(number) {
-        return 'Rp ' + (parseFloat(number) || 0).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-    }
-    
-    function copyToPayment(subJenis, jumlah) {
-        const url = '{{ route('user.pembayaran.create') }}';
-        window.location.href = `${url}?jenis=Zakat&sub=${encodeURIComponent(subJenis)}&jumlah=${jumlah}`;
-    }
+    // Helper Format Rupiah Global
+    window.formatRupiah = function(value) {
+        return 'Rp ' + (value || 0).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    };
 
-    function calculateFitrah() {
-        const pesertaInput = document.getElementById('fitrah_jumlah_peserta');
-        const totalFitrahDiv = document.getElementById('total_zakat_fitrah');
-        const totalFitrahValueInput = document.getElementById('total_zakat_fitrah_value');
+    // Helper Parse Rupiah Global
+    window.parseRupiah = function(str) {
+        if (!str) return 0;
+        const cleanStr = str.toString().replace(/[^0-9]/g, ''); 
+        return parseFloat(cleanStr) || 0;
+    };
 
-        const jiwa = parseInt(pesertaInput?.value) || 0;
-        const total = jiwa * fitrahAmount.uang_rp;
-        
-        totalFitrahDiv.textContent = formatRupiah(total);
-        totalFitrahValueInput.value = total;
-    }
-
-    function updateMaalCalculation(formId, isIncome) {
-        const form = document.getElementById(formId);
-        if (!form) return;
-
-        let totalHarta = 0;
-        let hutang = 0;
-        
-        const inputs = form.querySelectorAll('input[type="text"]');
-        
-        inputs.forEach(input => {
-            let value = parseFloat(input.value.replace(/\./g, '').replace(/,/g, '.')) || 0;
-            
-            if (input.id.includes('hutang') || input.id.includes('cicilan')) {
-                hutang += value;
-            } else if (value > 0) {
-                totalHarta += value;
-            }
-        });
-
-        const nishabValue = nishab;
-        const bersih = totalHarta - hutang;
-        let nilaiZakat = 0;
-        
-        if (bersih >= nishabValue && bersih > 0) {
-            nilaiZakat = bersih * 0.025;
-            ketentuanText = 'Wajib Zakat';
-            ketentuanClass = 'bg-green-100 text-green-700';
+    // Helper Auto Format Input
+    window.autoFormatInput = function(inputElement) {
+        let value = window.parseRupiah(inputElement.value);
+        if (value > 0) {
+            inputElement.value = value.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
         } else {
-            ketentuanText = 'Belum Wajib Zakat';
-            ketentuanClass = 'bg-yellow-100 text-yellow-700';
+            if(inputElement.value !== '') inputElement.value = '';
         }
+    };
 
-        const resultDiv = form.querySelector('[data-zakat-result]');
-        if (resultDiv) {
-            resultDiv.innerHTML = `
-                <div class="${ketentuanClass} p-4 rounded-lg mb-4 font-bold">${ketentuanText}</div>
-                <div>
-                    <p class="text-sm text-gray-600 mb-2">Total Harta: ${formatRupiah(totalHarta)}</p>
-                    <p class="text-sm text-gray-600 mb-2">Hutang/Cicilan: ${formatRupiah(hutang)}</p>
-                    <p class="text-sm text-gray-600 mb-4">Harta Bersih: ${formatRupiah(bersih)}</p>
-                    <hr class="mb-4">
-                    <p class="text-sm text-gray-600 mb-2">Zakat (2.5%): ${formatRupiah(nilaiZakat)}</p>
-                    <button onclick="copyToPayment('Zakat Maal ${isIncome ? 'Penghasilan' : 'Harta'}', ${nilaiZakat})" class="mt-4 w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 font-bold">
-                        Bayar Zakat Maal Sekarang →
-                    </button>
-                </div>
-            `;
+    // Helper Redirect Pembayaran
+    window.globalPay = function(subJenis, jumlah) {
+        if(jumlah <= 0) {
+            alert('Jumlah zakat belum valid.');
+            return;
         }
-    }
+        const url = `${window.ZakatConfig.paymentUrl}?jenis=Zakat&sub=${encodeURIComponent(subJenis)}&jumlah=${jumlah}`;
+        window.location.href = url;
+    };
 
-    // --- EVENT LISTENERS ---
+    // --- LOGIKA UI TABS & FITRAH (Sama seperti sebelumnya) ---
     document.addEventListener('DOMContentLoaded', function() {
-        const zakatTypeTabs = document.querySelectorAll('.zakat-tab-button');
-        const maalSubTabs = document.querySelectorAll('.maal-tab-button');
         const fitrahInput = document.getElementById('fitrah_jumlah_peserta');
+        if (fitrahInput) {
+            fitrahInput.addEventListener('input', function() {
+                const jiwa = parseInt(this.value) || 0;
+                const total = jiwa * window.ZakatConfig.fitrahPerSoul;
+                document.getElementById('total_zakat_fitrah').textContent = window.formatRupiah(total);
+                document.getElementById('total_zakat_fitrah_value').value = total;
+            });
+        }
 
-        zakatTypeTabs.forEach(tab => {
+        // Tab Logic (Copy dari kode sebelumnya atau biarkan jika sudah jalan)
+        const zakatTabs = document.querySelectorAll('.zakat-tab-button');
+        zakatTabs.forEach(tab => {
             tab.addEventListener('click', function() {
                 const type = this.dataset.zakatType;
-                
-                zakatTypeTabs.forEach(t => t.classList.remove('border-b-4', 'border-blue-500', 'text-blue-600', 'bg-blue-50'));
-                this.classList.add('border-b-4', 'border-blue-500', 'text-blue-600', 'bg-blue-50');
-                
-                document.querySelectorAll('.zakat-content').forEach(content => content.classList.add('hidden'));
-                
-                if (type === 'fitrah') {
-                    document.getElementById('fitrah-content').classList.remove('hidden');
-                } else {
-                    document.getElementById('maal-content').classList.remove('hidden');
-                }
+                zakatTabs.forEach(t => t.className = 'zakat-tab-button flex-1 px-6 py-4 text-lg font-bold rounded-lg transition-all duration-300 border-b-4 border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-700');
+                this.className = 'zakat-tab-button flex-1 px-6 py-4 text-lg font-bold rounded-lg transition-all duration-300 border-b-4 border-blue-500 text-blue-700 bg-blue-50 shadow-inner';
+                document.getElementById('fitrah-content').classList.add('hidden');
+                document.getElementById('maal-content').classList.add('hidden');
+                if (type === 'fitrah') document.getElementById('fitrah-content').classList.remove('hidden');
+                else document.getElementById('maal-content').classList.remove('hidden');
             });
         });
 
-        maalSubTabs.forEach(tab => {
+        const maalTabs = document.querySelectorAll('.maal-tab-button');
+        maalTabs.forEach(tab => {
             tab.addEventListener('click', function() {
                 const type = this.dataset.maalType;
-                
-                maalSubTabs.forEach(t => t.classList.remove('border-b-4', 'border-purple-500', 'text-purple-600', 'bg-purple-50'));
-                this.classList.add('border-b-4', 'border-purple-500', 'text-purple-600', 'bg-purple-50');
-                
-                document.querySelectorAll('.maal-inner-content').forEach(content => content.classList.add('hidden'));
-                
-                if (type === 'penghasilan') {
-                    document.getElementById('penghasilan-form').classList.remove('hidden');
-                } else {
-                    document.getElementById('harta-form').classList.remove('hidden');
-                }
+                maalTabs.forEach(t => t.className = 'maal-tab-button px-6 py-2 text-sm font-bold rounded-md transition-all text-gray-500 hover:text-gray-700');
+                this.className = 'maal-tab-button px-6 py-2 text-sm font-bold rounded-md transition-all shadow-sm bg-white text-purple-700';
+                document.querySelectorAll('.maal-inner-content').forEach(c => c.classList.add('hidden'));
+                if (type === 'penghasilan') document.getElementById('penghasilan-form').classList.remove('hidden');
+                else document.getElementById('harta-form').classList.remove('hidden');
             });
         });
-
-        if (fitrahInput) {
-            fitrahInput.addEventListener('input', calculateFitrah);
-            calculateFitrah();
-        }
     });
 </script>
 @endpush

@@ -6,6 +6,7 @@ use App\Models\Muzakki;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Hash;
 
 class MuzakkiController extends Controller
 {
@@ -86,12 +87,15 @@ class MuzakkiController extends Controller
             'password' => 'nullable|string|min:6',
         ]);
 
-        if ($validated['password']) {
-            $validated['password'] = bcrypt($validated['password']);
+        // Handle password - hanya update jika diisi
+        if ($request->filled('password')) {
+            $validated['password'] = Hash::make($request->input('password'));
         } else {
+            // Hapus password dari array jika kosong, jadi tidak akan diupdate
             unset($validated['password']);
         }
 
+        // Update data
         $muzakki->update($validated);
 
         return redirect()->route('admin.muzakki.show', $muzakki)

@@ -60,12 +60,50 @@ $mustahikPending = Mustahik::where('status_verifikasi', 'pending')
                            ->limit(10)
                            ->get();
 
-
         // Ambil Transaksi Terbaru
         $recentZis = ZisMasuk::with('muzakki')->orderBy('tgl_masuk', 'desc')->limit(5)->get();
         $recentPenyaluran = Penyaluran::with(['zisMasuk', 'mustahik'])->orderBy('tgl_salur', 'desc')->limit(5)->get();
 
-        return view('admin.index', compact( // DIUBAH DARI 'dashboard.index' ke 'admin.index'
+        // === STATISTIK PER BULAN (TAHUN INI) ===
+        $currentYear = now()->year;
+        $monthlyZis = ZisMasuk::selectRaw('MONTH(tgl_masuk) as month, SUM(jumlah) as total')
+                              ->whereYear('tgl_masuk', $currentYear)
+                              ->groupBy('month')
+                              ->get()
+                              ->keyBy('month');
+        $monthlyPenyaluran = Penyaluran::selectRaw('MONTH(tgl_salur) as month, SUM(jumlah) as total')
+                                       ->whereYear('tgl_salur', $currentYear)
+                                       ->groupBy('month')
+                                       ->get()
+                                       ->keyBy('month');
+
+        // === STATUS BREAKDOWN ===
+        $muzakkiApproved = Muzakki::where('status_pendaftaran', 'disetujui')->count();
+        $muzakkiRejected = Muzakki::where('status_pendaftaran', 'ditolak')->count();
+        $mustahikApproved = Mustahik::where('status_verifikasi', 'disetujui')->count();
+        $mustahikRejected = Mustahik::where('status_verifikasi', 'ditolak')->count();
+
+        // === KATEGORI MUSTAHIK TERBANYAK ===
+        $topCategories = Mustahik::select('kategori_mustahik')
+                                 ->where('status_verifikasi', 'disetujui')
+                                 ->groupBy('kategori_mustahik')
+                                 ->selectRaw('kategori_mustahik, COUNT(*) as count')
+                                 ->orderBy('count', 'desc')
+                                 ->limit(5)
+                                 ->get();
+
+        // === JENIS ZIS TERBANYAK ===
+        $topZisTypes = ZisMasuk::select('jenis_zis')
+                               ->groupBy('jenis_zis')
+                               ->selectRaw('jenis_zis, COUNT(*) as count, SUM(jumlah) as total')
+                               ->orderBy('count', 'desc')
+                               ->limit(4)
+                               ->get();
+
+        // === TOTAL PENDING ===
+        $totalPending = $muzakkiPending->count() + $mustahikPending->count();
+
+        return view('admin.index', compact(
             'totalZis', 
             'totalPenyaluran', 
             'sisaDana', 
@@ -76,7 +114,16 @@ $mustahikPending = Mustahik::where('status_verifikasi', 'pending')
             'recentZis', 
             'recentPenyaluran',
             'muzakkiPending',
-            'mustahikPending' // <-- Variabel Mustahik Pending ditambahkan
+            'mustahikPending',
+            'monthlyZis',
+            'monthlyPenyaluran',
+            'muzakkiApproved',
+            'muzakkiRejected',
+            'mustahikApproved',
+            'mustahikRejected',
+            'topCategories',
+            'topZisTypes',
+            'totalPending'
         ));
     }
     

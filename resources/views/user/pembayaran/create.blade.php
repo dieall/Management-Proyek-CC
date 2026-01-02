@@ -45,13 +45,13 @@
                 </h3>
                 <select name="jenis_zis" id="jenis_zis" required class="w-full py-3 px-4 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition text-gray-800 font-semibold">
                     <option value="">-- Pilih Zakat / Infak / Sedekah --</option>
-                    <option value="Zakat" {{ old('jenis_zis') == 'Zakat' ? 'selected' : '' }}>
+                    <option value="zakat" {{ old('jenis_zis') == 'zakat' ? 'selected' : '' }}>
                         <i class="fas fa-hands-praying"></i> Zakat
                     </option>
-                    <option value="Infak" {{ old('jenis_zis') == 'Infak' ? 'selected' : '' }}>
+                    <option value="infaq" {{ old('jenis_zis') == 'infaq' ? 'selected' : '' }}>
                         <i class="fas fa-heart"></i> Infak
                     </option>
-                    <option value="Sedekah" {{ old('jenis_zis') == 'Sedekah' ? 'selected' : '' }}>
+                    <option value="shadaqah" {{ old('jenis_zis') == 'shadaqah' ? 'selected' : '' }}>
                         <i class="fas fa-gift"></i> Sedekah
                     </option>
                 </select>
@@ -200,7 +200,7 @@
             const selectedJenis = jenisZis.value;
             const selectedTipe = tipeZakat.value;
 
-            if (selectedJenis === 'Zakat') {
+            if (selectedJenis === 'zakat') {
                 zakatBlock.classList.remove('hidden');
             } else {
                 zakatBlock.classList.add('hidden');

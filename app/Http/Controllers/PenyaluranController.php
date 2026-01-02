@@ -14,13 +14,53 @@ class PenyaluranController extends Controller
     /**
      * Display a listing of penyaluran.
      */
-    public function index(): View
+    /**
+     * Display a listing of penyaluran.
+     */
+    public function index(Request $request): View
     {
-        $penyaluran = Penyaluran::with(['zisMasuk.muzakki', 'mustahik']) // DIPERBAIKI: zisMasuk
-            ->orderBy('tgl_salur', 'desc')
-            ->paginate(10);
+        $query = Penyaluran::with(['zisMasuk.muzakki', 'mustahik']);
 
-        return view('zis.penyaluran.index', compact('penyaluran'));
+        // Get filter parameter
+        $month = $request->input('month');
+        $search = $request->input('search');
+
+        // Apply filters
+        if ($month) {
+            $query->whereMonth('tgl_salur', $month);
+        }
+        if ($search) {
+            $query->whereHas('mustahik', function($q) use ($search) {
+                $q->where('nama', 'like', '%' . $search . '%');
+            })->orWhereHas('zisMasuk.muzakki', function($q) use ($search) {
+                $q->where('nama', 'like', '%' . $search . '%');
+            });
+        }
+
+        // --- PERBAIKAN DI SINI ---
+        // Mengurutkan berdasarkan waktu input data (created_at)
+        // Data yang baru saja diinput akan langsung muncul di paling atas
+        $query->orderBy('created_at', 'desc');
+
+        $penyaluran = $query->paginate(10)->appends($request->query());
+
+        // Get summary based on filters
+        $summaryQuery = Penyaluran::query();
+        if ($month) $summaryQuery->whereMonth('tgl_salur', $month);
+        if ($search) {
+            $summaryQuery->where(function($q) use ($search) {
+                $q->whereHas('mustahik', function($sq) use ($search) {
+                    $sq->where('nama', 'like', '%' . $search . '%');
+                })->orWhereHas('zisMasuk.muzakki', function($sq) use ($search) {
+                    $sq->where('nama', 'like', '%' . $search . '%');
+                });
+            });
+        }
+
+        $totalPenyaluran = $summaryQuery->sum('jumlah');
+        $countPenyaluran = $summaryQuery->count();
+
+        return view('zis.penyaluran.index', compact('penyaluran', 'totalPenyaluran', 'countPenyaluran', 'month', 'search'));
     }
 
     /**

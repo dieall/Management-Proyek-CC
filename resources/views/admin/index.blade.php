@@ -160,6 +160,110 @@
         </div>
     </section>
 
+    {{-- ===== STATISTIK TAMBAHAN ===== --}}
+    <section>
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <i class="fas fa-chart-pie text-purple-600 mr-3"></i>Statistik Lainnya
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {{-- Muzakki Disetujui --}}
+            <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg shadow-md p-6 border-l-4 border-green-600">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-gray-600 text-sm font-semibold">Muzakki Disetujui</p>
+                        <p class="text-3xl font-bold text-green-700 mt-2">{{ $muzakkiApproved }}</p>
+                    </div>
+                    <i class="fas fa-user-check text-5xl text-green-200"></i>
+                </div>
+            </div>
+
+            {{-- Muzakki Ditolak --}}
+            <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-lg shadow-md p-6 border-l-4 border-red-600">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-gray-600 text-sm font-semibold">Muzakki Ditolak</p>
+                        <p class="text-3xl font-bold text-red-700 mt-2">{{ $muzakkiRejected }}</p>
+                    </div>
+                    <i class="fas fa-user-times text-5xl text-red-200"></i>
+                </div>
+            </div>
+
+            {{-- Mustahik Disetujui --}}
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-md p-6 border-l-4 border-blue-600">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-gray-600 text-sm font-semibold">Mustahik Disetujui</p>
+                        <p class="text-3xl font-bold text-blue-700 mt-2">{{ $mustahikApproved }}</p>
+                    </div>
+                    <i class="fas fa-users text-5xl text-blue-200"></i>
+                </div>
+            </div>
+
+            {{-- Mustahik Ditolak --}}
+            <div class="bg-gradient-to-br from-pink-50 to-pink-100 rounded-lg shadow-md p-6 border-l-4 border-pink-600">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-gray-600 text-sm font-semibold">Mustahik Ditolak</p>
+                        <p class="text-3xl font-bold text-pink-700 mt-2">{{ $mustahikRejected }}</p>
+                    </div>
+                    <i class="fas fa-user-slash text-5xl text-pink-200"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- ===== JENIS ZIS TERBANYAK ===== --}}
+    @if($topZisTypes->isNotEmpty())
+    <section>
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <i class="fas fa-list text-indigo-600 mr-3"></i>Jenis ZIS Terbanyak
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            @foreach($topZisTypes as $zisType)
+            <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-indigo-600">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-bold text-gray-800 capitalize">{{ ucfirst($zisType->jenis_zis) }}</h3>
+                    <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-sm font-bold">
+                        {{ $zisType->count }} Transaksi
+                    </span>
+                </div>
+                <p class="text-gray-600 text-sm mb-2">
+                    <i class="fas fa-sum text-gray-400 mr-2"></i>Total: <span class="font-bold text-indigo-600">Rp {{ number_format($zisType->total, 0, ',', '.') }}</span>
+                </p>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="bg-indigo-600 h-2 rounded-full" style="width: {{ ($zisType->total / $topZisTypes->sum('total') * 100) }}%"></div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </section>
+    @endif
+
+    {{-- ===== KATEGORI MUSTAHIK ===== --}}
+    @if($topCategories->isNotEmpty())
+    <section>
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <i class="fas fa-users text-cyan-600 mr-3"></i>Kategori Mustahik Terbanyak
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            @foreach($topCategories as $category)
+            <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-cyan-600">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-bold text-gray-800 capitalize">{{ ucfirst(str_replace('_', ' ', $category->kategori_mustahik)) }}</h3>
+                    <span class="bg-cyan-100 text-cyan-700 px-3 py-1 rounded-full text-sm font-bold">
+                        {{ $category->count }} Orang
+                    </span>
+                </div>
+                <p class="text-gray-600 text-sm">
+                    <i class="fas fa-percentage text-cyan-600 mr-1"></i>
+                    <span class="font-semibold">{{ round($category->count / $topCategories->sum('count') * 100, 1) }}%</span> dari total
+                </p>
+            </div>
+            @endforeach
+        </div>
+    </section>
+    @endif
+
     {{-- ===== PERSETUJUAN MUZAKKI ===== --}}
     <section>
         <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
