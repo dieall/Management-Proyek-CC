@@ -5,12 +5,31 @@
 
 @section('content')
 <div class="bg-white rounded-lg shadow p-6 mb-6">
-    <div class="flex justify-between items-center mb-4">
+    <div class="flex justify-between items-center mb-6">
         <h3 class="text-lg font-semibold text-gray-800">Data Mustahik (Penerima Zakat)</h3>
         <a href="{{ route('admin.mustahik.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
             <i class="fas fa-plus mr-2"></i> Tambah Mustahik
         </a>
     </div>
+
+    <!-- Search Bar -->
+    <form method="GET" action="{{ route('admin.mustahik.index') }}" class="mb-6">
+        <div class="flex gap-2">
+            <div class="flex-1">
+                <input type="text" name="search" placeholder="Cari berdasarkan nama..." 
+                       value="{{ $search }}" 
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                <i class="fas fa-search mr-2"></i>Cari
+            </button>
+            @if($search)
+                <a href="{{ route('admin.mustahik.index') }}" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition">
+                    <i class="fas fa-times mr-2"></i>Reset
+                </a>
+            @endif
+        </div>
+    </form>
 
     <div class="overflow-x-auto">
         <table class="w-full">

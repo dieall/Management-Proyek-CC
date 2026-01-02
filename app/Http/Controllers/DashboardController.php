@@ -51,13 +51,13 @@ class DashboardController extends Controller
         $muzakkiPending = Muzakki::where('status_pendaftaran', 'menunggu')
                                  ->with('user')
                                  ->orderBy('tgl_daftar', 'asc')
-                                 ->limit(7) // Batasi tampilan di dashboard
+                                 ->limit(10)
                                  ->get();
                                  
         // --- TAMBAHAN BARU: MUSTAHIK PENDING ---
 $mustahikPending = Mustahik::where('status_verifikasi', 'pending')
                            ->orderBy('created_at', 'asc')
-                           ->limit(7)
+                           ->limit(10)
                            ->get();
 
 

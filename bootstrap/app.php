@@ -28,6 +28,11 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]);
+        
+        // Exclude CSRF validation from login attempt (prevent token expired issues)
+        $middleware->validateCsrfTokens(except: [
+            'login',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

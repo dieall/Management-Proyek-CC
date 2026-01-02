@@ -35,8 +35,17 @@
                 </div>
                 @if($mustahik->surat_dtks)
                     <div>
-                        <p class="text-gray-500 text-sm">No. Surat DTKS</p>
-                        <p class="text-gray-800 font-medium">{{ $mustahik->surat_dtks }}</p>
+                        <p class="text-gray-500 text-sm mb-2">No. Surat DTKS</p>
+                        <div class="flex items-center gap-3">
+                            <p class="text-gray-800 font-medium">{{ $mustahik->surat_dtks }}</p>
+                            <a href="{{ asset('storage/' . $mustahik->surat_dtks) }}" 
+                               target="_blank" 
+                               class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm font-medium transition shadow-md hover:shadow-lg">
+                                <i class="fas fa-file-download mr-1"></i>
+                                <span class="hidden sm:inline">Lihat File</span>
+                                <span class="sm:hidden">File</span>
+                            </a>
+                        </div>
                     </div>
                 @endif
                 <div>

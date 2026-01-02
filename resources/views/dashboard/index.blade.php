@@ -5,7 +5,7 @@
 
 @section('content')
 
-{{-- Bagian Persetujuan Muzakki --}}
+{{-- Bagian Persetujuan Muzakk --}}
 <h2 class="text-2xl font-bold mb-4 mt-8">🔔 Permintaan Pendaftaran Muzakki Baru (Approval)</h2>
 
     @if($muzakkiMenunggu->isEmpty())

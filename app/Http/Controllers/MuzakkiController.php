@@ -12,10 +12,19 @@ class MuzakkiController extends Controller
     /**
      * Display a listing of muzakki.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $muzakki = Muzakki::orderBy('nama')->paginate(10);
-        return view('zis.muzakki.index', compact('muzakki'));
+        $search = $request->input('search');
+        
+        $query = Muzakki::query();
+        
+        if ($search) {
+            $query->where('nama', 'like', '%' . $search . '%');
+        }
+        
+        $muzakki = $query->orderBy('nama')->paginate(10)->appends($request->query());
+        
+        return view('zis.muzakki.index', compact('muzakki', 'search'));
     }
 
     /**

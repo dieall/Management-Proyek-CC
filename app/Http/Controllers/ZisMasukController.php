@@ -91,7 +91,7 @@ class ZisMasukController extends Controller
         $is_admin = ($user->role === 'admin');
 
         $validation_rules = [
-            'jenis_zis' => 'required|in:Zakat,Infak,Sedekah', 
+            'jenis_zis' => 'required|in:zakat,infaq,shadaqah,wakaf', 
             'jumlah' => 'required|numeric|min:0',
             'keterangan' => 'nullable|string',
             'sub_jenis_zis' => 'nullable|string|max:50', 

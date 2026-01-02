@@ -14,11 +14,20 @@ class MustahikController extends Controller
     /**
      * Display a listing of mustahik (Hanya yang sudah disetujui/aktif).
      */
-    public function index(): View
+    public function index(Request $request): View
     {
         // Default: Hanya tampilkan mustahik yang sudah disetujui
-        $mustahik = Mustahik::where('status_verifikasi', 'disetujui')->orderBy('nama')->paginate(10);
-        return view('zis.mustahik.index', compact('mustahik'));
+        $search = $request->input('search');
+        
+        $query = Mustahik::where('status_verifikasi', 'disetujui');
+        
+        if ($search) {
+            $query->where('nama', 'like', '%' . $search . '%');
+        }
+        
+        $mustahik = $query->orderBy('nama')->paginate(10)->appends($request->query());
+        
+        return view('zis.mustahik.index', compact('mustahik', 'search'));
     }
 
     /**

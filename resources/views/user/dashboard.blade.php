@@ -72,54 +72,52 @@
 
     @else
         {{-- STATUS: DISETUJUI - TAMPILKAN DASHBOARD --}}
-        {{-- STAT CARDS --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {{-- STAT CARDS & ACTION BUTTONS --}}
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
             {{-- Total Donasi --}}
             <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition p-6 border-t-4 border-green-600">
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between h-full">
                     <div>
                         <p class="text-gray-600 text-sm font-semibold">Total Donasi ZIS</p>
-                        <p class="text-3xl font-bold text-green-700 mt-2">Rp {{ number_format($totalDonasi, 0, ',', '.') }}</p>
+                        <p class="text-2xl font-bold text-green-700 mt-2">Rp {{ number_format($totalDonasi, 0, ',', '.') }}</p>
                     </div>
-                    <i class="fas fa-heart text-5xl text-green-200"></i>
+                    <i class="fas fa-heart text-4xl text-green-200"></i>
                 </div>
             </div>
             
             {{-- Input ZIS Baru --}}
-            <a href="{{ route('user.pembayaran.create') }}" class="group bg-white rounded-xl shadow-md hover:shadow-lg transition p-6 border-t-4 border-purple-600">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-600 text-sm font-semibold">Transaksi Baru</p>
-                        <p class="text-2xl font-bold text-purple-700 mt-2 group-hover:text-purple-800 transition">Buat Pembayaran</p>
-                    </div>
-                    <i class="fas fa-plus-circle text-5xl text-purple-200 group-hover:text-purple-300 transition"></i>
+            <a href="{{ route('user.pembayaran.create') }}" class="group bg-white rounded-xl shadow-md hover:shadow-lg transition p-6 border-t-4 border-purple-600 flex flex-col justify-between h-full">
+                <div>
+                    <p class="text-gray-600 text-sm font-semibold">Aksi Cepat</p>
+                    <p class="text-lg font-bold text-purple-700 mt-2 group-hover:text-purple-800 transition flex items-center">
+                        <i class="fas fa-plus-circle mr-2"></i>Donasi
+                    </p>
                 </div>
+                <i class="fas fa-arrow-right text-2xl text-purple-200 group-hover:text-purple-300 transition mt-4"></i>
             </a>
 
             {{-- Riwayat --}}
-            <a href="{{ route('user.pembayaran.index') }}" class="group bg-white rounded-xl shadow-md hover:shadow-lg transition p-6 border-t-4 border-orange-600">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-600 text-sm font-semibold">Riwayat</p>
-                        <p class="text-2xl font-bold text-orange-700 mt-2 group-hover:text-orange-800 transition">Lihat Semua</p>
-                    </div>
-                    <i class="fas fa-history text-5xl text-orange-200 group-hover:text-orange-300 transition"></i>
+            <a href="{{ route('user.pembayaran.index') }}" class="group bg-white rounded-xl shadow-md hover:shadow-lg transition p-6 border-t-4 border-orange-600 flex flex-col justify-between h-full">
+                <div>
+                    <p class="text-gray-600 text-sm font-semibold">Riwayat</p>
+                    <p class="text-lg font-bold text-orange-700 mt-2 group-hover:text-orange-800 transition flex items-center">
+                        <i class="fas fa-history mr-2"></i>Lihat Semua
+                    </p>
                 </div>
+                <i class="fas fa-arrow-right text-2xl text-orange-200 group-hover:text-orange-300 transition mt-4"></i>
+            </a>
+
+            {{-- Kalkulator --}}
+            <a href="{{ route('user.kalkulator.index') }}" class="group bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl shadow-md hover:shadow-lg transition p-6 text-white flex flex-col justify-between h-full">
+                <div>
+                    <p class="text-indigo-100 text-sm font-semibold">Tools</p>
+                    <p class="text-lg font-bold mt-2 group-hover:text-indigo-50 transition flex items-center">
+                        <i class="fas fa-calculator mr-2"></i>Kalkulator
+                    </p>
+                </div>
+                <i class="fas fa-arrow-right text-2xl text-indigo-200 group-hover:text-indigo-100 transition mt-4"></i>
             </a>
         </div>
-
-        {{-- KALKULATOR QUICK ACCESS --}}
-        <a href="{{ route('user.kalkulator.index') }}" class="group bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl shadow-md hover:shadow-lg transition p-6 border-t-4 border-indigo-600">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-indigo-800 font-semibold flex items-center">
-                        <i class="fas fa-calculator text-indigo-600 mr-2"></i>Hitung Zakat Anda
-                    </p>
-                    <p class="text-indigo-700 text-sm mt-1">Gunakan kalkulator untuk menentukan jumlah zakat yang tepat</p>
-                </div>
-                <i class="fas fa-calculator text-5xl text-indigo-200 opacity-50"></i>
-            </div>
-        </a>
         
         {{-- RIWAYAT TRANSAKSI TERBARU --}}
         <div class="bg-white rounded-xl shadow-md p-6">

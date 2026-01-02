@@ -97,17 +97,6 @@
                 </div>
                 <p class="text-gray-600 text-sm">{{ $mustahikPending->count() }} menunggu verifikasi</p>
             </a>
-
-            {{-- Kelola Data --}}
-            <a href="{{ route('admin.muzakki.index') }}" class="group bg-white rounded-lg shadow-md hover:shadow-xl transition p-6 border-t-4 border-blue-600">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-semibold text-gray-800 group-hover:text-blue-600 transition">
-                        <i class="fas fa-database text-blue-600 mr-2"></i>Kelola Data Master
-                    </h3>
-                    <i class="fas fa-arrow-right text-blue-300 text-xl"></i>
-                </div>
-                <p class="text-gray-600 text-sm">Akses daftar lengkap semua data</p>
-            </a>
         </div>
     </section>
 

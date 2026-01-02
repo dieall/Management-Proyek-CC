@@ -3,18 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistem Manajemen Zakat, Infaq & Shadaqah">
+    <meta name="theme-color" content="#2563eb">
     <title>@yield('title', 'Manajemen ZIS')</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Mobile menu toggle */
+        .sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+        .sidebar.hidden {
+            transform: translateX(-100%);
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
-    <div class="flex min-h-screen">
-        <aside class="w-64 bg-gradient-to-b from-blue-700 to-blue-800 text-white shadow-lg">
-            <div class="p-6">
+    <div class="flex min-h-screen flex-col md:flex-row">
+        <!-- Mobile Menu Toggle Button -->
+        <button id="menu-toggle" class="md:hidden fixed top-4 left-4 z-50 bg-blue-700 text-white p-3 rounded-lg shadow-lg">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+
+        <!-- Sidebar (dengan responsive behavior) -->
+        <aside id="sidebar" class="sidebar fixed inset-y-0 left-0 z-40 w-64 bg-gradient-to-b from-blue-700 to-blue-800 text-white shadow-lg md:relative md:translate-x-0 md:flex md:flex-col">
+            <div class="p-6 flex justify-between items-center">
                 <h1 class="text-2xl font-bold flex items-center gap-2">
                     <i class="fas fa-hand-holding-heart"></i>
-                    ZIS Management
+                    <span class="hidden sm:inline">ZIS Management</span>
                 </h1>
+                <button id="close-menu" class="md:hidden text-white text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             
             <nav class="mt-8 px-4 space-y-2">
@@ -70,20 +90,20 @@
             </nav>
         </aside>
 
-        <main class="flex-1">
-            <nav class="bg-white shadow-sm border-b border-gray-200">
-                <div class="px-6 py-4 flex justify-between items-center">
-                    <h2 class="text-xl font-semibold text-gray-800">@yield('page_title', 'Dashboard')</h2>
-                    <div class="flex items-center gap-4">
+        <main class="flex-1 w-full md:ml-0 mt-16 md:mt-0">
+            <nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-30">
+                <div class="px-4 md:px-6 py-3 md:py-4 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
+                    <h2 class="text-lg md:text-xl font-semibold text-gray-800">@yield('page_title', 'Dashboard')</h2>
+                    <div class="flex items-center gap-2 md:gap-4 flex-wrap">
                         @auth
-                            <span class="text-sm text-gray-600">
+                            <span class="text-xs md:text-sm text-gray-600 truncate">
                                 <i class="fas fa-user-circle mr-1"></i>
-                                {{ Auth::user()->nama_lengkap }}
+                                <span class="hidden sm:inline">{{ Auth::user()->nama_lengkap }}</span>
                             </span>
                             <form action="{{ route('logout') }}" method="POST" class="inline">
                                 @csrf
-                                <button type="submit" class="text-sm text-red-600 hover:text-red-800">
-                                    <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                                <button type="submit" class="text-xs md:text-sm text-red-600 hover:text-red-800 px-2 md:px-0">
+                                    <i class="fas fa-sign-out-alt mr-1"></i> <span class="hidden sm:inline">Logout</span>
                                 </button>
                             </form>
                         @endauth
@@ -91,11 +111,11 @@
                 </div>
             </nav>
 
-            <div class="p-6">
+            <div class="p-4 md:p-6">
                 @if ($errors->any())
-                    <div class="mb-4 bg-red-50 border border-red-200 rounded p-4">
-                        <h3 class="text-red-800 font-semibold mb-2">Validation Errors</h3>
-                        <ul class="text-red-700 text-sm space-y-1">
+                    <div class="mb-4 bg-red-50 border border-red-200 rounded p-3 md:p-4">
+                        <h3 class="text-red-800 font-semibold mb-2 text-sm md:text-base">Validation Errors</h3>
+                        <ul class="text-red-700 text-xs md:text-sm space-y-1">
                             @foreach ($errors->all() as $error)
                                 <li>• {{ $error }}</li>
                             @endforeach
@@ -104,7 +124,7 @@
                 @endif
 
                 @if (session('success'))
-                    <div class="mb-4 bg-green-50 border border-green-200 rounded p-4 text-green-700">
+                    <div class="mb-4 bg-green-50 border border-green-200 rounded p-3 md:p-4 text-green-700 text-sm md:text-base">
                         <i class="fas fa-check-circle mr-2"></i>
                         {{ session('success') }}
                     </div>
@@ -114,6 +134,38 @@
             </div>
         </main>
     </div>
+
+    <!-- Mobile Overlay -->
+    <div id="mobile-overlay" class="fixed inset-0 bg-black opacity-50 z-30 hidden md:hidden"></div>
+
+    <!-- Mobile Menu Scripts -->
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const closeMenu = document.getElementById('close-menu');
+        const mobileOverlay = document.getElementById('mobile-overlay');
+
+        // Open menu
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.remove('hidden');
+            mobileOverlay.classList.remove('hidden');
+        });
+
+        // Close menu
+        const closeMenuHandler = () => {
+            sidebar.classList.add('hidden');
+            mobileOverlay.classList.add('hidden');
+        };
+
+        closeMenu.addEventListener('click', closeMenuHandler);
+        mobileOverlay.addEventListener('click', closeMenuHandler);
+
+        // Close menu when a link is clicked
+        const navLinks = sidebar.querySelectorAll('a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', closeMenuHandler);
+        });
+    </script>
 
     {{-- Script stack untuk JavaScript (penting untuk Kalkulator dinamis) --}}
     @stack('scripts') 

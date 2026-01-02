@@ -76,9 +76,6 @@
                         <p class="text-xs mt-2 text-blue-100">Masuk ke akun Anda</p>
                     </a>
 
-<<<<<<< HEAD
-            
-=======
                     {{-- Daftar Jemaah Button --}}
                     <a href="{{ route('register') }}" class="group bg-gradient-to-br from-purple-600 to-purple-700 text-white px-8 py-4 rounded-lg hover:shadow-xl transition transform hover:-translate-y-1 font-semibold text-lg">
                         <div class="flex flex-col items-center">
@@ -123,7 +120,6 @@
                 <p class="text-sm text-gray-600"><strong>Username:</strong> <code class="bg-gray-100 px-2 py-1 rounded text-blue-600 font-mono">admin_zis</code></p>
                 <p class="text-sm text-gray-600"><strong>Password:</strong> <code class="bg-gray-100 px-2 py-1 rounded text-blue-600 font-mono">password</code></p>
             </div>
->>>>>>> 55e9176 (backend manpro)
         </div>
     </div>
 

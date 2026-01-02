@@ -44,8 +44,19 @@
         
         {{-- Surat DTKS --}}
         <div class="md:col-span-2">
-            <p class="font-medium text-gray-600">Nomor/Keterangan DTKS</p>
-            <p class="font-bold text-gray-900 text-lg">{{ $mustahik->surat_dtks ?? 'Tidak tercatat' }}</p>
+            <p class="font-medium text-gray-600 mb-2">Nomor/Keterangan DTKS</p>
+            <div class="flex items-center gap-3">
+                <p class="font-bold text-gray-900 text-lg">{{ $mustahik->surat_dtks ?? 'Tidak tercatat' }}</p>
+                @if($mustahik->surat_dtks)
+                    <a href="{{ asset('storage/' . $mustahik->surat_dtks) }}" 
+                       target="_blank" 
+                       class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-3 md:px-4 py-2 rounded text-sm md:text-base font-medium transition shadow-md hover:shadow-lg">
+                        <i class="fas fa-file-download mr-2"></i>
+                        <span class="hidden sm:inline">Lihat File</span>
+                        <span class="sm:hidden">File</span>
+                    </a>
+                @endif
+            </div>
         </div>
     </div>
     
