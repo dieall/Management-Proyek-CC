@@ -29,14 +29,20 @@
             <div class="row">
                 <div class="col-md-3 mb-3">
                     <label class="form-label">Tanggal</label>
+                    <input type="date" name="date" class="form-control"
+                           value="{{ request('date') }}">
                     <input type="date" name="date" class="form-control" value="{{ request('date') }}">
                 </div>
                 <div class="col-md-3 mb-3">
                     <label class="form-label">Dari Tanggal</label>
+                    <input type="date" name="date_from" class="form-control"
+                           value="{{ request('date_from') }}">
                     <input type="date" name="date_from" class="form-control" value="{{ request('date_from') }}">
                 </div>
                 <div class="col-md-3 mb-3">
                     <label class="form-label">Sampai Tanggal</label>
+                    <input type="date" name="date_to" class="form-control"
+                           value="{{ request('date_to') }}">
                     <input type="date" name="date_to" class="form-control" value="{{ request('date_to') }}">
                 </div>
                 <div class="col-md-3 mb-3">
@@ -50,6 +56,8 @@
                     <select name="committee_id" class="form-select">
                         <option value="">Semua Pengurus</option>
                         @foreach($committees as $committee)
+                            <option value="{{ $committee->id }}"
+                                {{ request('committee_id') == $committee->id ? 'selected' : '' }}>
                             <option value="{{ $committee->id }}" {{ request('committee_id') == $committee->id ? 'selected' : '' }}>
                                 {{ $committee->full_name }}
                             </option>
@@ -62,6 +70,8 @@
                     <select name="duty_type" class="form-select">
                         <option value="">Semua Jenis</option>
                         @foreach($dutyTypes as $type)
+                            <option value="{{ $type }}"
+                                {{ request('duty_type') == $type ? 'selected' : '' }}>
                             <option value="{{ $type }}" {{ request('duty_type') == $type ? 'selected' : '' }}>
                                 {{ ucfirst($type) }}
                             </option>
@@ -85,12 +95,33 @@
                     <select name="location" class="form-select">
                         <option value="">Semua Lokasi</option>
                         @foreach($locations as $location)
+                            <option value="{{ $location }}"
+                                {{ request('location') == $location ? 'selected' : '' }}>
                             <option value="{{ $location }}" {{ request('location') == $location ? 'selected' : '' }}>
                                 {{ $location }}
                             </option>
                         @endforeach
                     </select>
                 </div>
+                <div class="col-md-3">
+                    <label class="form-label">Cari</label>
+                    <input type="text" name="search" class="form-control"
+                           placeholder="Cari lokasi, catatan, atau nama..."
+                           value="{{ request('search') }}">
+                </div>
+                <div class="col-12">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                        <a href="{{ route('duty-schedules.index') }}" class="btn btn-secondary">
+                            <i class="fas fa-redo"></i> Reset
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
             </div>
 
             <div class="mt-3">
@@ -132,6 +163,8 @@
                                 <small class="text-muted">{{ $schedule->duty_date->translatedFormat('l') }}</small>
                             </td>
                             <td>
+                                {{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }} -
+                                {{ \Carbon\Carbon::parse($schedule->end_time)->format('H:i') }}
                                 <strong>{{ $schedule->start_time->format('H:i') }} - {{ $schedule->end_time->format('H:i') }}</strong>
                             </td>
                             <td>
@@ -166,12 +199,19 @@
                             </td>
                             <td>
                                 <div class="btn-group" role="group">
+                                    <a href="{{ route('duty-schedules.show', $schedule->id) }}"
+                                       class="btn btn-sm btn-info" title="Detail">
                                     <a href="{{ route('duty-schedules.show', $schedule->id) }}" class="btn btn-sm btn-info">
                                         <i class="fas fa-eye"></i>
                                     </a>
+                                    <a href="{{ route('duty-schedules.edit', $schedule->id) }}"
+                                       class="btn btn-sm btn-warning" title="Edit">
                                     <a href="{{ route('duty-schedules.edit', $schedule->id) }}" class="btn btn-sm btn-warning">
                                         <i class="fas fa-edit"></i>
                                     </a>
+                                    <button type="button" class="btn btn-sm btn-danger"
+                                            title="Hapus"
+                                            onclick="confirmDelete({{ $schedule->id }}, '{{ $schedule->committee->full_name }} - {{ \Carbon\Carbon::parse($schedule->duty_date)->format('d/m/Y') }}')">
                                     <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ $schedule->id }}, '{{ addslashes($schedule->committee->full_name) }} - {{ $schedule->duty_date->format('d/m/Y') }}')">
                                         <i class="fas fa-trash"></i>
                                     </button>
@@ -247,3 +287,4 @@ function getDutyTypeColor($type) {
     return ['piket'=>'primary','kebersihan'=>'success','keamanan'=>'dark','administrasi'=>'info','lainnya'=>'secondary'][$type] ?? 'secondary';
 }
 @endphp
+

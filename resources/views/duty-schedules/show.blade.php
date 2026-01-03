@@ -202,3 +202,4 @@ function getDutyTypeColor($type) {
     return ['piket'=>'primary','kebersihan'=>'success','keamanan'=>'dark','administrasi'=>'info','lainnya'=>'secondary'][$type] ?? 'secondary';
 }
 @endphp
+

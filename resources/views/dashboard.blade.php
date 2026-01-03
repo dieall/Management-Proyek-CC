@@ -88,6 +88,65 @@
     </div>
 </div>
 
+    <!-- Content Row -->
+    <div class="row">
+        <!-- Left Column -->
+        <div class="col-lg-8">
+            <!-- Today's Schedule -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-calendar-day"></i> Jadwal Hari Ini
+                    </h6>
+                    <a href="{{ route('duty-schedules.index') }}" class="btn btn-sm btn-primary">
+                        Lihat Semua
+                    </a>
+                </div>
+                <div class="card-body">
+                    @if($todaySchedules->count() > 0)
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Pengurus</th>
+                                        <th>Waktu</th>
+                                        <th>Lokasi</th>
+                                        <th>Tugas</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($todaySchedules as $schedule)
+                                    <tr>
+                                        <td>{{ $schedule->committee->full_name ?? '-' }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }} -
+                                            {{ \Carbon\Carbon::parse($schedule->end_time)->format('H:i') }}</td>
+                                        <td>{{ $schedule->location }}</td>
+                                        <td>
+                                            <span class="badge bg-info">{{ $schedule->duty_type }}</span>
+                                        </td>
+                                        <td>
+                                            @if($schedule->status == 'ongoing')
+                                                <span class="badge bg-warning">Sedang Berjalan</span>
+                                            @elseif($schedule->status == 'completed')
+                                                <span class="badge bg-success">Selesai</span>
+                                            @else
+                                                <span class="badge bg-secondary">{{ $schedule->status }}</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <div class="text-center py-4">
+                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">Tidak ada jadwal untuk hari ini</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
 <!-- Content Row -->
 <div class="row">
     <!-- Jadwal Hari Ini -->
@@ -149,8 +208,42 @@
                                     {{ $task->status == 'overdue' ? 'Terlambat' : 'Mendesak' }}
                                 </span>
                             </div>
-                            <div class="progress mt-2" style="height: 8px;">
-                                <div class="progress-bar" style="width: {{ $task->progress_percentage }}%"></div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-muted">Belum ada data pengurus</p>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Urgent Tasks -->
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-danger">
+                        <i class="fas fa-exclamation-triangle"></i> Tugas Mendesak
+                    </h6>
+                </div>
+                <div class="card-body">
+                    @if($urgentTasks->count() > 0)
+                        <div class="list-group list-group-flush">
+                            @foreach($urgentTasks as $task)
+                            <div class="list-group-item px-0">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ $task->jobResponsibility->task_name ?? 'Tugas' }}</h6>
+                                    <small class="text-{{ $task->status == 'overdue' ? 'danger' : 'warning' }}">
+                                        {{ $task->status == 'overdue' ? 'Terlambat' : 'Mendesak' }}
+                                    </small>
+                                </div>
+                                <p class="mb-1">
+                                    <small>Oleh: {{ $task->committee->full_name ?? '-' }}</small>
+                                </p>
+                                <small class="text-muted">
+                                    Jatuh tempo: {{ \Carbon\Carbon::parse($task->due_date)->format('d/m/Y') }}
+                                </small>
+                                <div class="progress mt-2" style="height: 5px;">
+                                    <div class="progress-bar bg-{{ $task->status == 'overdue' ? 'danger' : 'warning' }}"
+                                         style="width: {{ $task->progress_percentage }}%"></div>
+                                </div>
                             </div>
                         </li>
                         @endforeach

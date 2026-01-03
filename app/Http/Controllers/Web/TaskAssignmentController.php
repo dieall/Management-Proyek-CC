@@ -22,7 +22,7 @@ class TaskAssignmentController extends Controller
             ->latest('assigned_date');
 
         // Search
-        if ($request->has('search')) {
+        if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('notes', 'like', "%{$search}%")
@@ -58,20 +58,20 @@ class TaskAssignmentController extends Controller
         }
 
         // Filter by date
-        if ($request->has('date_from')) {
+        if ($request->has('date_from') && $request->date_from != '') {
             $query->whereDate('assigned_date', '>=', $request->date_from);
         }
 
-        if ($request->has('date_to')) {
+        if ($request->has('date_to') && $request->date_to != '') {
             $query->whereDate('assigned_date', '<=', $request->date_to);
         }
 
         // Filter by due date
-        if ($request->has('due_date_from')) {
+        if ($request->has('due_date_from') && $request->due_date_from != '') {
             $query->whereDate('due_date', '>=', $request->due_date_from);
         }
 
-        if ($request->has('due_date_to')) {
+        if ($request->has('due_date_to') && $request->due_date_to != '') {
             $query->whereDate('due_date', '<=', $request->due_date_to);
         }
 

@@ -71,6 +71,8 @@ Route::middleware(['auth'])->group(function () {
     // Additional Duty Schedule Routes
     Route::get('duty-schedules/today/list', [DutyScheduleController::class, 'today'])
         ->name('duty-schedules.today');
+    Route::get('duty-schedules/weekly/list', [DutyScheduleController::class, 'weekly'])
+        ->name('duty-schedules.weekly');
     Route::get('duty-schedules/upcoming/list', [DutyScheduleController::class, 'upcoming'])
         ->name('duty-schedules.upcoming');
     Route::patch('duty-schedules/{duty_schedule}/status/update', [DutyScheduleController::class, 'updateStatus'])
