@@ -63,10 +63,19 @@
 
             {{-- CTA BUTTONS --}}
             @guest
-            <div class="bg-white rounded-xl shadow-2xl p-12 max-w-2xl mx-auto">
+            <div class="bg-white rounded-xl shadow-2xl p-12 max-w-4xl mx-auto">
                 <h2 class="text-3xl font-bold text-gray-800 mb-8">Mulai Sekarang</h2>
                 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    {{-- Daftar Muzakki Button --}}
+                    <a href="{{ route('register') }}" class="group bg-gradient-to-br from-purple-600 to-indigo-700 text-white px-8 py-4 rounded-lg hover:shadow-xl transition transform hover:-translate-y-1 font-semibold text-lg">
+                        <div class="flex flex-col items-center">
+                            <i class="fas fa-user-plus text-3xl mb-3 group-hover:scale-110 transition"></i>
+                            <span>Daftar Muzakki</span>
+                        </div>
+                        <p class="text-xs mt-2 text-purple-100">Pendaftar Baru</p>
+                    </a>
+
                     {{-- Login Muzakki Button --}}
                     <a href="{{ route('login') }}" class="group bg-gradient-to-br from-blue-600 to-blue-700 text-white px-8 py-4 rounded-lg hover:shadow-xl transition transform hover:-translate-y-1 font-semibold text-lg">
                         <div class="flex flex-col items-center">
@@ -76,28 +85,24 @@
                         <p class="text-xs mt-2 text-blue-100">Pembayar Zakat</p>
                     </a>
 
-                    {{-- Login Mustahik Button --}}
-                    <a href="{{ route('mustahik.login') }}" class="group bg-gradient-to-br from-amber-600 to-orange-700 text-white px-8 py-4 rounded-lg hover:shadow-xl transition transform hover:-translate-y-1 font-semibold text-lg">
-                        <div class="flex flex-col items-center">
-                            <i class="fas fa-heart text-3xl mb-3 group-hover:scale-110 transition"></i>
-                            <span>Login Mustahik</span>
-                        </div>
-                        <p class="text-xs mt-2 text-amber-100">Penerima Zakat</p>
-                    </a>
-
                     {{-- Daftar Mustahik Button --}}
                     <a href="{{ route('mustahik.register') }}" class="group bg-gradient-to-br from-green-600 to-green-700 text-white px-8 py-4 rounded-lg hover:shadow-xl transition transform hover:-translate-y-1 font-semibold text-lg">
                         <div class="flex flex-col items-center">
                             <i class="fas fa-hand-holding text-3xl mb-3 group-hover:scale-110 transition"></i>
                             <span>Daftar Mustahik</span>
                         </div>
-                        <p class="text-xs mt-2 text-green-100">Pendaftar Baru</p>
+                        <p class="text-xs mt-2 text-green-100">Penerima Zakat</p>
+                    </a>
+
+                    {{-- Login Mustahik Button --}}
+                    <a href="{{ route('mustahik.login') }}" class="group bg-gradient-to-br from-amber-600 to-orange-700 text-white px-8 py-4 rounded-lg hover:shadow-xl transition transform hover:-translate-y-1 font-semibold text-lg">
+                        <div class="flex flex-col items-center">
+                            <i class="fas fa-heart text-3xl mb-3 group-hover:scale-110 transition"></i>
+                            <span>Login Mustahik</span>
+                        </div>
+                        <p class="text-xs mt-2 text-amber-100">Login</p>
                     </a>
                 </div>
-
-                <p class="text-gray-600 text-sm">
-                    Belum punya akun? <a href="{{ route('register') }}" class="text-blue-600 hover:underline font-semibold">Daftar sebagai Muzakki</a>
-                </p>
             </div>
             @else
             <div class="bg-white rounded-xl shadow-2xl p-12 max-w-2xl mx-auto">
@@ -110,17 +115,6 @@
             @endguest
         </div>
 
-        {{-- INFO FOOTER --}}
-        <div class="mt-16 max-w-2xl bg-blue-50 border-l-4 border-blue-600 rounded-lg p-6 text-left">
-            <h3 class="font-semibold text-gray-800 mb-3 text-lg">
-                <i class="fas fa-info-circle text-blue-600 mr-2"></i>Informasi Login Admin
-            </h3>
-            <p class="text-gray-700 mb-2">Untuk mengakses dashboard admin, gunakan kredensial berikut:</p>
-            <div class="bg-white p-4 rounded border border-blue-200">
-                <p class="text-sm text-gray-600"><strong>Username:</strong> <code class="bg-gray-100 px-2 py-1 rounded text-blue-600 font-mono">admin_zis</code></p>
-                <p class="text-sm text-gray-600"><strong>Password:</strong> <code class="bg-gray-100 px-2 py-1 rounded text-blue-600 font-mono">password</code></p>
-            </div>
-        </div>
     </div>
 
     {{-- FOOTER --}}
