@@ -3,269 +3,223 @@
 @section('title', 'Penugasan Tugas')
 
 @section('content')
-<div class="container-fluid">
-    <!-- Page Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0 text-gray-800">
-            <i class="fas fa-clipboard-check text-primary"></i> Penugasan Tugas
-        </h1>
-        <div class="btn-group">
-            <a href="{{ route('task-assignments.create') }}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Buat Penugasan
-            </a>
-            <a href="{{ route('task-assignments.overdue') }}" class="btn btn-danger">
-                <i class="fas fa-exclamation-triangle"></i> Terlambat
-            </a>
-            <a href="{{ route('task-assignments.statistics') }}" class="btn btn-info">
-                <i class="fas fa-chart-bar"></i> Statistik
-            </a>
-        </div>
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Penugasan Tugas</h1>
+    <div>
+        <a href="{{ route('task-assignments.create') }}" class="btn btn-primary shadow-sm mr-2">
+            <i class="fas fa-plus fa-sm text-white-50"></i> Buat Penugasan
+        </a>
+        <a href="{{ route('task-assignments.overdue') }}" class="btn btn-danger shadow-sm mr-2">
+            <i class="fas fa-exclamation-triangle fa-sm text-white-50"></i> Terlambat
+        </a>
+        <a href="{{ route('task-assignments.statistics') }}" class="btn btn-info shadow-sm">
+            <i class="fas fa-chart-bar fa-sm text-white-50"></i> Statistik
+        </a>
     </div>
+</div>
 
-    <!-- Filters Card -->
-    <div class="card shadow mb-4">
-        <div class="card-body">
-            <form method="GET" action="{{ route('task-assignments.index') }}" class="row g-3">
-                <div class="col-md-3">
-                    <label class="form-label">Pengurus</label>
+<!-- Filter Card -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Filter & Pencarian</h6>
+    </div>
+    <div class="card-body">
+        <form method="GET" action="{{ route('task-assignments.index') }}">
+            <div class="row">
+                <div class="col-md-3 mb-3">
                     <select name="committee_id" class="form-select">
                         <option value="">Semua Pengurus</option>
                         @foreach($committees as $committee)
-                            <option value="{{ $committee->id }}" 
-                                {{ request('committee_id') == $committee->id ? 'selected' : '' }}>
-                                {{ $committee->full_name }}
-                                @if($committee->position)
-                                    - {{ $committee->position->name }}
-                                @endif
+                            <option value="{{ $committee->id }}" {{ request('committee_id') == $committee->id ? 'selected' : '' }}>
+                                {{ $committee->full_name }} @if($committee->position) - {{ $committee->position->name }} @endif
                             </option>
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label">Tugas</label>
+                <div class="col-md-3 mb-3">
                     <select name="job_responsibility_id" class="form-select">
                         <option value="">Semua Tugas</option>
                         @foreach($jobResponsibilities as $responsibility)
-                            <option value="{{ $responsibility->id }}" 
-                                {{ request('job_responsibility_id') == $responsibility->id ? 'selected' : '' }}>
+                            <option value="{{ $responsibility->id }}" {{ request('job_responsibility_id') == $responsibility->id ? 'selected' : '' }}>
                                 {{ $responsibility->task_name }}
-                                @if($responsibility->position)
-                                    ({{ $responsibility->position->name }})
-                                @endif
                             </option>
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-2">
-                    <label class="form-label">Status</label>
+                <div class="col-md-2 mb-3">
                     <select name="status" class="form-select">
                         <option value="">Semua Status</option>
                         <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                        <option value="in_progress" {{ request('status') == 'in_progress' ? 'selected' : '' }}>Dalam Proses</option>
+                        <option value="in_progress" {{ request('status') == 'in_progress' ? 'selected' : '' }}>Proses</option>
                         <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Selesai</option>
                         <option value="overdue" {{ request('status') == 'overdue' ? 'selected' : '' }}>Terlambat</option>
                         <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
                     </select>
                 </div>
-                <div class="col-md-2">
-                    <label class="form-label">Prioritas</label>
+                <div class="col-md-2 mb-3">
                     <select name="priority" class="form-select">
-                        <option value="">Semua Prioritas</option>
+                        <option value="">Prioritas</option>
                         <option value="critical" {{ request('priority') == 'critical' ? 'selected' : '' }}>Kritis</option>
                         <option value="high" {{ request('priority') == 'high' ? 'selected' : '' }}>Tinggi</option>
                         <option value="medium" {{ request('priority') == 'medium' ? 'selected' : '' }}>Sedang</option>
                         <option value="low" {{ request('priority') == 'low' ? 'selected' : '' }}>Rendah</option>
                     </select>
                 </div>
-                <div class="col-md-2">
-                    <label class="form-label">Filter Khusus</label>
-                    <select name="filter_type" class="form-select" onchange="toggleFilterOptions(this.value)">
-                        <option value="">Pilih Filter</option>
-                        <option value="overdue" {{ request('overdue') ? 'selected' : '' }}>Terlambat</option>
-                        <option value="due_soon" {{ request('due_soon') ? 'selected' : '' }}>Deadline Dekat</option>
-                        <option value="date_range" {{ request('date_from') || request('date_to') ? 'selected' : '' }}>Rentang Tanggal</option>
-                        <option value="due_date_range" {{ request('due_date_from') || request('due_date_to') ? 'selected' : '' }}>Rentang Deadline</option>
-                    </select>
-                </div>
-                <div class="col-md-3" id="dateRange" style="display: {{ request('date_from') || request('date_to') ? 'block' : 'none' }};">
-                    <label class="form-label">Tanggal Penugasan</label>
-                    <div class="input-group">
-                        <input type="date" name="date_from" class="form-control" 
-                               value="{{ request('date_from') }}" placeholder="Dari">
-                        <span class="input-group-text">-</span>
-                        <input type="date" name="date_to" class="form-control" 
-                               value="{{ request('date_to') }}" placeholder="Sampai">
-                    </div>
-                </div>
-                <div class="col-md-3" id="dueDateRange" style="display: {{ request('due_date_from') || request('due_date_to') ? 'block' : 'none' }};">
-                    <label class="form-label">Tanggal Deadline</label>
-                    <div class="input-group">
-                        <input type="date" name="due_date_from" class="form-control" 
-                               value="{{ request('due_date_from') }}" placeholder="Dari">
-                        <span class="input-group-text">-</span>
-                        <input type="date" name="due_date_to" class="form-control" 
-                               value="{{ request('due_date_to') }}" placeholder="Sampai">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Cari</label>
-                    <input type="text" name="search" class="form-control" 
-                           placeholder="Cari catatan, nama pengurus, atau tugas..."
+                <div class="col-md-2 mb-3">
+                    <input type="text" name="search" class="form-control" placeholder="Cari catatan..."
                            value="{{ request('search') }}">
                 </div>
-                <div class="col-12">
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-filter"></i> Filter
-                        </button>
-                        <a href="{{ route('task-assignments.index') }}" class="btn btn-secondary">
-                            <i class="fas fa-redo"></i> Reset
-                        </a>
-                    </div>
+            </div>
+            <div class="row" id="advancedFilters" style="display: {{ request()->except(['committee_id','job_responsibility_id','status','priority','search','page']) ? 'block' : 'none' }};">
+                <div class="col-md-3 mb-3">
+                    <input type="date" name="date_from" class="form-control" value="{{ request('date_from') }}" placeholder="Penugasan Dari">
                 </div>
-            </form>
-        </div>
+                <div class="col-md-3 mb-3">
+                    <input type="date" name="date_to" class="form-control" value="{{ request('date_to') }}" placeholder="Penugasan Sampai">
+                </div>
+                <div class="col-md-3 mb-3">
+                    <input type="date" name="due_date_from" class="form-control" value="{{ request('due_date_from') }}" placeholder="Deadline Dari">
+                </div>
+                <div class="col-md-3 mb-3">
+                    <input type="date" name="due_date_to" class="form-control" value="{{ request('due_date_to') }}" placeholder="Deadline Sampai">
+                </div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <div>
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="toggleAdvanced()">
+                        <i class="fas fa-filter"></i> Filter Lanjutan
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-sm ml-2">
+                        <i class="fas fa-search"></i> Terapkan
+                    </button>
+                </div>
+                <a href="{{ route('task-assignments.index') }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-redo"></i> Reset
+                </a>
+            </div>
+        </form>
     </div>
+</div>
 
-    <!-- Assignments Table -->
-    <div class="card shadow">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Tugas</th>
-                            <th>Pengurus</th>
-                            <th>Tanggal</th>
-                            <th>Deadline</th>
-                            <th>Progress</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($assignments as $assignment)
-                        @php
-                            $isOverdue = $assignment->is_overdue;
-                        @endphp
+<!-- Table Card -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Daftar Penugasan</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tugas</th>
+                        <th>Pengurus</th>
+                        <th>Tanggal</th>
+                        <th>Deadline</th>
+                        <th>Progress</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($assignments as $assignment)
+                        @php $isOverdue = $assignment->due_date->isPast() && $assignment->status != 'completed'; @endphp
                         <tr class="{{ $isOverdue ? 'table-danger' : ($assignment->status == 'completed' ? 'table-success' : '') }}">
                             <td>{{ $loop->iteration + ($assignments->currentPage() - 1) * $assignments->perPage() }}</td>
                             <td>
-                                <div class="fw-bold">{{ $assignment->jobResponsibility->task_name }}</div>
+                                <strong>{{ $assignment->jobResponsibility->task_name }}</strong><br>
                                 <small class="text-muted">
                                     @if($assignment->jobResponsibility->position)
-                                        <i class="fas fa-sitemap"></i> {{ $assignment->jobResponsibility->position->name }}
-                                    @else
-                                        <i class="fas fa-sitemap"></i> Tidak ada posisi
+                                        {{ $assignment->jobResponsibility->position->name }}
                                     @endif
                                 </small>
                             </td>
                             <td>
-                                <div class="fw-bold">{{ $assignment->committee->full_name }}</div>
-                                @if($assignment->committee->position)
-                                    <small class="text-muted">{{ $assignment->committee->position->name }}</small>
-                                @endif
+                                <strong>{{ $assignment->committee->full_name }}</strong>
                             </td>
+                            <td>{{ $assignment->assigned_date->format('d/m/Y') }}</td>
                             <td>
-                                {{ \Carbon\Carbon::parse($assignment->assigned_date)->format('d/m/Y') }}
-                            </td>
-                            <td>
-                                {{ \Carbon\Carbon::parse($assignment->due_date)->format('d/m/Y') }}
+                                {{ $assignment->due_date->format('d/m/Y') }}
                                 @if($isOverdue)
-                                    <br><small class="text-danger"><i class="fas fa-exclamation-circle"></i> Terlambat</small>
+                                    <br><span class="badge badge-danger">Terlambat</span>
                                 @endif
                             </td>
                             <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="progress grow" style="height: 8px;">
-                                        <div class="progress-bar bg-{{ $assignment->progress_percentage == 100 ? 'success' : 'info' }}" 
-                                             style="width: {{ $assignment->progress_percentage }}%"></div>
+                                <div class="progress" style="height: 20px;">
+                                    <div class="progress-bar bg-{{ $assignment->progress_percentage == 100 ? 'success' : 'info' }}"
+                                         style="width: {{ $assignment->progress_percentage }}%">
+                                        {{ $assignment->progress_percentage }}%
                                     </div>
-                                    <small class="ms-2">{{ $assignment->progress_percentage }}%</small>
                                 </div>
                             </td>
                             <td>
-                                @if($assignment->status == 'completed')
-                                    <span class="badge bg-success">Selesai</span>
-                                    @if($assignment->approved_by)
-                                        <br><small class="text-success"><i class="fas fa-check"></i> Disetujui</small>
-                                    @endif
-                                @elseif($assignment->status == 'overdue' || $isOverdue)
-                                    <span class="badge bg-danger">Terlambat</span>
-                                @elseif($assignment->status == 'in_progress')
-                                    <span class="badge bg-warning">Dalam Proses</span>
-                                @elseif($assignment->status == 'pending')
-                                    <span class="badge bg-info">Pending</span>
-                                @else
-                                    <span class="badge bg-secondary">{{ $assignment->status }}</span>
-                                @endif
+                                @switch($assignment->status)
+                                    @case('completed') <span class="badge badge-success">Selesai</span> @break
+                                    @case('in_progress') <span class="badge badge-warning">Proses</span> @break
+                                    @case('pending') <span class="badge badge-info">Pending</span> @break
+                                    @case('overdue') <span class="badge badge-danger">Terlambat</span> @break
+                                    @default <span class="badge badge-secondary">Dibatalkan</span>
+                                @endswitch
                             </td>
                             <td>
                                 <div class="btn-group" role="group">
-                                    <a href="{{ route('task-assignments.show', $assignment->id) }}" 
-                                       class="btn btn-sm btn-info" title="Detail">
+                                    <a href="{{ route('task-assignments.show', $assignment->id) }}" class="btn btn-sm btn-info">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('task-assignments.edit', $assignment->id) }}" 
-                                       class="btn btn-sm btn-warning" title="Edit">
+                                    <a href="{{ route('task-assignments.edit', $assignment->id) }}" class="btn btn-sm btn-warning">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <button type="button" class="btn btn-sm btn-danger" 
-                                            title="Hapus"
-                                            onclick="confirmDelete({{ $assignment->id }}, '{{ $assignment->jobResponsibility->task_name }}')">
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ $assignment->id }}, '{{ addslashes($assignment->jobResponsibility->task_name) }}')">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
                             </td>
                         </tr>
-                        @empty
+                    @empty
                         <tr>
-                            <td colspan="8" class="text-center py-4">
+                            <td colspan="8" class="text-center py-5">
                                 <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
-                                <p class="text-muted">Tidak ada data penugasan</p>
+                                <p class="text-muted">Belum ada penugasan tugas</p>
                                 <a href="{{ route('task-assignments.create') }}" class="btn btn-primary">
                                     <i class="fas fa-plus"></i> Buat Penugasan Pertama
                                 </a>
                             </td>
                         </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
-            <!-- Pagination -->
-            @if($assignments->hasPages())
-            <div class="d-flex justify-content-between align-items-center mt-4">
+        @if($assignments->hasPages())
+            <div class="d-flex justify-content-between mt-4">
                 <div class="text-muted">
-                    Menampilkan {{ $assignments->firstItem() }} - {{ $assignments->lastItem() }} dari {{ $assignments->total() }} data
+                    Menampilkan {{ $assignments->firstItem() }} - {{ $assignments->lastItem() }} dari {{ $assignments->total() }} penugasan
                 </div>
                 <div>
-                    {{ $assignments->links() }}
+                    {{ $assignments->links('vendor.pagination.bootstrap-4') }}
                 </div>
             </div>
-            @endif
-        </div>
+        @endif
     </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1">
-    <div class="modal-dialog">
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Konfirmasi Hapus</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <h5 class="modal-title">Konfirmasi Hapus Penugasan</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
             </div>
             <div class="modal-body">
-                <p>Apakah Anda yakin ingin menghapus penugasan <strong id="deleteName"></strong>?</p>
-                <p class="text-danger"><small>Tindakan ini tidak dapat dibatalkan.</small></p>
+                <p>Yakin ingin menghapus penugasan <strong id="deleteName"></strong>?</p>
+                <p class="text-danger"><small>Data yang dihapus tidak dapat dikembalikan.</small></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <form id="deleteForm" method="POST" style="display: inline;">
-                    @csrf
-                    @method('DELETE')
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                <form id="deleteForm" method="POST" style="display:inline;">
+                    @csrf @method('DELETE')
                     <button type="submit" class="btn btn-danger">Hapus</button>
                 </form>
             </div>
@@ -278,37 +232,13 @@
 <script>
 function confirmDelete(id, name) {
     document.getElementById('deleteName').textContent = name;
-    document.getElementById('deleteForm').action = `/task-assignments/${id}`;
-    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+    document.getElementById('deleteForm').action = '/task-assignments/' + id;
+    $('#deleteModal').modal('show');
 }
 
-function toggleFilterOptions(value) {
-    document.getElementById('dateRange').style.display = 'none';
-    document.getElementById('dueDateRange').style.display = 'none';
-    
-    if (value === 'date_range') {
-        document.getElementById('dateRange').style.display = 'block';
-    } else if (value === 'due_date_range') {
-        document.getElementById('dueDateRange').style.display = 'block';
-    } else if (value === 'overdue') {
-        // Add hidden input for overdue
-        if (!document.querySelector('input[name="overdue"]')) {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'overdue';
-            input.value = 'true';
-            document.querySelector('form').appendChild(input);
-        }
-    } else if (value === 'due_soon') {
-        // Add hidden input for due_soon
-        if (!document.querySelector('input[name="due_soon"]')) {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'due_soon';
-            input.value = 'true';
-            document.querySelector('form').appendChild(input);
-        }
-    }
+function toggleAdvanced() {
+    const el = document.getElementById('advancedFilters');
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
 </script>
 @endpush

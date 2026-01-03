@@ -8,6 +8,7 @@ use App\Http\Requests\StoreCommitteeRequest;
 use App\Http\Requests\UpdateCommitteeRequest;
 use App\Models\Committee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CommitteeController extends Controller
 {
@@ -71,6 +72,13 @@ class CommitteeController extends Controller
             }
 
             $committee = Committee::create($data);
+
+            // Upload CV
+            if ($request->hasFile('cv')) {
+                $cvPath = $request->file('cv')->store('cvs', 'public');
+                $committee->cv_path = $cvPath;
+                $committee->save();
+            }
 
             // Create position history if position is assigned
             if ($committee->position_id) {
@@ -164,6 +172,18 @@ class CommitteeController extends Controller
             }
 
             $committee->update($data);
+
+            // Upload CV jika ada
+            if ($request->hasFile('cv')) {
+                // Hapus CV lama jika ada
+                if ($committee->cv_path && Storage::disk('public')->exists($committee->cv_path)) {
+                    Storage::disk('public')->delete($committee->cv_path);
+                }
+
+                $cvPath = $request->file('cv')->store('cvs', 'public');
+                $committee->cv_path = $cvPath;
+                $committee->save();
+            }
 
             return ResponseHelper::success(
                 $request,

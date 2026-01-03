@@ -8,7 +8,7 @@ class UpdateCommitteeRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return $this->user()?->isSuperAdmin() ?? false;
     }
 
     public function rules(): array
@@ -27,6 +27,15 @@ class UpdateCommitteeRequest extends FormRequest
             'position_id' => 'nullable|exists:positions,id',
             'user_id' => 'nullable|exists:users,id',
             'photo_path' => 'nullable|string|max:500',
+            'cv' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'cv.mimes' => 'CV harus berupa file PDF, DOC, atau DOCX',
+            'cv.max' => 'Ukuran CV maksimal 10MB',
         ];
     }
 }

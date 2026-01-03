@@ -8,7 +8,7 @@ class StoreCommitteeRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // Ganti dengan authorization logic jika ada
+        return $this->user()?->isSuperAdmin() ?? false;
     }
 
     public function rules(): array
@@ -25,6 +25,7 @@ class StoreCommitteeRequest extends FormRequest
             'position_id' => 'nullable|exists:positions,id',
             'user_id' => 'nullable|exists:users,id',
             'photo_path' => 'nullable|string|max:500',
+            'cv' => 'nullable|file|mimes:pdf,doc,docx|max:10240', // Max 10MB
         ];
     }
 
@@ -38,6 +39,8 @@ class StoreCommitteeRequest extends FormRequest
             'birth_date.before_or_equal' => 'Tanggal lahir tidak boleh lebih dari hari ini',
             'join_date.after_or_equal' => 'Tanggal bergabung tidak boleh sebelum tanggal lahir',
             'position_id.exists' => 'Jabatan tidak ditemukan',
+            'cv.mimes' => 'CV harus berupa file PDF, DOC, atau DOCX',
+            'cv.max' => 'Ukuran CV maksimal 10MB',
         ];
     }
 }

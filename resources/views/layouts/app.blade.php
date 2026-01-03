@@ -1,156 +1,208 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Sistem Takmir Masjid')</title>
-    
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        body {
-            padding-top: 70px;
-            background-color: #f8f9fa;
-        }
-        .navbar-brand {
-            font-weight: bold;
-        }
-        .sidebar {
-            min-height: calc(100vh - 70px);
-            background: #343a40;
-        }
-        .sidebar .nav-link {
-            color: #adb5bd;
-            padding: 10px 15px;
-        }
-        .sidebar .nav-link:hover {
-            color: #fff;
-            background: #495057;
-        }
-        .sidebar .nav-link.active {
-            color: #fff;
-            background: #007bff;
-        }
-        .main-content {
-            padding: 20px;
-        }
-        .card {
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,.1);
-            margin-bottom: 20px;
-        }
-    </style>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Sistem Manajemen Takmir Masjid">
+    <meta name="author" content="Takmir Masjid">
+
+    <title>@yield('title', 'Takmir Masjid') - SB Admin 2</title>
+
+    <!-- Custom fonts for this template -->
+    <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
+
     @stack('styles')
 </head>
-<body>
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('dashboard') }}">
-                <i class="fas fa-mosque"></i> Takmir Masjid
-            </a>
-            
-            @auth
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                            <i class="fas fa-user"></i> {{ Auth::user()->name }}
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <i class="fas fa-sign-out-alt"></i> Logout
-                                </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                    @csrf
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-            @endauth
-        </div>
-    </nav>
 
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            @auth
-            <div class="col-md-3 col-lg-2 d-md-block sidebar collapse">
-                <div class="position-sticky pt-3">
-                    <nav class="nav flex-column">
-                        <a class="nav-link {{ Request::routeIs('dashboard') ? 'active' : '' }}" 
-                           href="{{ route('dashboard') }}">
-                            <i class="fas fa-home"></i> Dashboard
-                        </a>
-                        <a class="nav-link {{ Request::is('committees*') ? 'active' : '' }}" 
-                           href="{{ route('committees.index') }}">
-                            <i class="fas fa-users"></i> Data Pengurus
-                        </a>
-                        <a class="nav-link {{ Request::is('positions*') ? 'active' : '' }}" 
-                           href="{{ route('positions.index') }}">
-                            <i class="fas fa-sitemap"></i> Jabatan
-                        </a>
-                        <a class="nav-link {{ Request::is('job-responsibilities*') ? 'active' : '' }}" 
-                           href="{{ route('job-responsibilities.index') }}">
-                            <i class="fas fa-tasks"></i> Tugas & Tanggung Jawab
-                        </a>
-                        <a class="nav-link {{ Request::is('duty-schedules*') ? 'active' : '' }}" 
-                           href="{{ route('duty-schedules.index') }}">
-                            <i class="fas fa-calendar-alt"></i> Jadwal Piket
-                        </a>
-                        <a class="nav-link {{ Request::is('task-assignments*') ? 'active' : '' }}" 
-                           href="{{ route('task-assignments.index') }}">
-                            <i class="fas fa-clipboard-check"></i> Penugasan
-                        </a>
-                    </nav>
+<body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard') }}">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-mosque"></i>
                 </div>
+                <div class="sidebar-brand-text mx-3">Takmir Masjid</div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item {{ Request::routeIs('dashboard') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('dashboard') }}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">Manajemen</div>
+
+            <li class="nav-item {{ Request::is('committees*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('committees.index') }}">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span>Data Pengurus</span>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::is('positions*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('positions.index') }}">
+                    <i class="fas fa-fw fa-sitemap"></i>
+                    <span>Jabatan</span>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::is('job-responsibilities*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('job-responsibilities.index') }}">
+                    <i class="fas fa-fw fa-tasks"></i>
+                    <span>Tugas & Tanggung Jawab</span>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::is('duty-schedules*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('duty-schedules.index') }}">
+                    <i class="fas fa-fw fa-calendar-alt"></i>
+                    <span>Jadwal Piket</span>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::is('task-assignments*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('task-assignments.index') }}">
+                    <i class="fas fa-fw fa-clipboard-check"></i>
+                    <span>Penugasan Tugas</span>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::is('votings*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('votings.index') }}">
+                    <i class="fas fa-fw fa-vote-yea"></i>
+                    <span>Voting Jabatan</span>
+                </a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
-            @endauth
+        </ul>
+        <!-- End of Sidebar -->
 
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
             <!-- Main Content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
+            <div id="content">
 
-                @if(session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
-                        {{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
 
-                @yield('content')
-            </main>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                    {{ Auth::check() ? Auth::user()->name : 'Guest' }}
+                                </span>
+                                <img class="img-profile rounded-circle" src="{{ asset('vendor/fontawesome-free/svgs/solid/user.svg') }}" width="30">
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in">
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <!-- Flash Messages -->
+                    @if(session('success'))
+                        <div class="alert alert-success alert-dismissible fade show">
+                            {{ session('success') }}
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        </div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            {{ session('error') }}
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        </div>
+                    @endif
+
+                    @yield('content')
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Takmir Masjid {{ date('Y') }}</span>
+                    </div>
+                </div>
+            </footer>
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        // Auto-dismiss alerts
-        setTimeout(() => {
-            document.querySelectorAll('.alert').forEach(alert => {
-                const bsAlert = new bootstrap.Alert(alert);
-                bsAlert.close();
-            });
-        }, 5000);
-    </script>
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Yakin ingin keluar?</h5>
+                    <button class="close" type="button" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">Pilih "Logout" jika Anda ingin mengakhiri sesi.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
+                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="btn btn-primary">Logout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+    <!-- Core plugin JavaScript -->
+    <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+
+    <!-- Custom scripts for all pages -->
+    <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
+
     @stack('scripts')
 </body>
 </html>

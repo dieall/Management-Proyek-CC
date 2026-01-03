@@ -1,0 +1,9 @@
+.bg-login-image {
+    background: url("/img/mosque-bg.jpg");
+    background-position: center;
+    background-size: cover;
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(87deg, #4e73df 0, #224abe 100%) !important;
+}

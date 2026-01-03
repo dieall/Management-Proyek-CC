@@ -101,4 +101,14 @@ Route::middleware(['auth'])->group(function () {
         ->name('task-assignments.update-progress');
     Route::post('task-assignments/{task_assignment}/approve', [TaskAssignmentController::class, 'approve'])
         ->name('task-assignments.approve');
+
+    // Voting Routes
+    Route::prefix('votings')->name('votings.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Web\VotingController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\Web\VotingController::class, 'create'])->name('create');
+        Route::post('/', [App\Http\Controllers\Web\VotingController::class, 'store'])->name('store');
+        Route::get('/{id}', [App\Http\Controllers\Web\VotingController::class, 'show'])->name('show');
+        Route::post('/{id}/vote', [App\Http\Controllers\Web\VotingController::class, 'vote'])->name('vote');
+        Route::post('/{id}/close', [App\Http\Controllers\Web\VotingController::class, 'close'])->name('close');
+    });
 });

@@ -87,6 +87,10 @@ Route::name('api.')->group(function () {
     Route::patch('organizational-structure/order', [ApiOrganizationalStructureController::class, 'updateOrder'])
         ->name('organizational-structure.update-order');
 
+    Route::apiResource('votings', \App\Http\Controllers\Api\VotingController::class);
+    Route::post('votings/{voting}/vote', [\App\Http\Controllers\Api\VotingController::class, 'castVote'])->name('votings.vote');
+    Route::post('votings/{voting}/close', [\App\Http\Controllers\Api\VotingController::class, 'close'])->name('votings.close');
+
     // ==============================
     // HEALTH CHECK
     // ==============================

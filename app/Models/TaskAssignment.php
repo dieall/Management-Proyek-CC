@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Carbon\Carbon; // TAMBAHKAN INI
+use Carbon\Carbon; 
 
 class TaskAssignment extends Model
 {
@@ -92,7 +92,6 @@ class TaskAssignment extends Model
             return false;
         }
 
-        // PERBAIKAN: Gunakan Carbon instance untuk lt()
         $dueDate = Carbon::parse($this->due_date);
 
         return $dueDate->lt(today()) &&

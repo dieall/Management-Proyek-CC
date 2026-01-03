@@ -27,6 +27,7 @@ class Committee extends Model
         'position_id',
         'user_id',
         'photo_path',
+        'cv_path', // untuk upload CV
     ];
 
     protected $casts = [
@@ -36,93 +37,53 @@ class Committee extends Model
         'gender' => 'string',
     ];
 
-    /**
-     * Get the current position of the committee.
-     */
     public function position(): BelongsTo
     {
         return $this->belongsTo(Position::class);
     }
 
-    /**
-     * Get the user account associated with the committee.
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the position histories for the committee.
-     */
     public function positionHistories(): HasMany
     {
         return $this->hasMany(PositionHistory::class);
     }
 
-    /**
-     * Get the duty schedules for the committee.
-     */
     public function dutySchedules(): HasMany
     {
         return $this->hasMany(DutySchedule::class);
     }
 
-    /**
-     * Get the task assignments for the committee.
-     */
     public function taskAssignments(): HasMany
     {
         return $this->hasMany(TaskAssignment::class);
     }
 
-    /**
-     * Get current active position history.
-     */
     public function currentPositionHistory()
     {
         return $this->hasOne(PositionHistory::class)->where('is_active', true)->latest();
     }
 
-    /**
-     * Scope active committees.
-     */
     public function scopeActive($query)
     {
         return $query->where('active_status', 'active');
     }
 
-    /**
-     * Scope by position.
-     */
     public function scopeByPosition($query, $positionId)
     {
         return $query->where('position_id', $positionId);
     }
 
-    /**
-     * Get age of committee member.
-     */
     public function getAgeAttribute(): ?int
     {
-        if (!$this->birth_date) {
-            return null;
-        }
-
-        $birthDate = Carbon::parse($this->birth_date);
-        return now()->diffInYears($birthDate);
+        return $this->birth_date ? Carbon::parse($this->birth_date)->diffInYears(now()) : null;
     }
 
-    /**
-     * Get tenure in years.
-     */
     public function getTenureAttribute(): ?int
     {
-        if (!$this->join_date) {
-            return null;
-        }
-
-        $joinDate = Carbon::parse($this->join_date);
-        return now()->diffInYears($joinDate);
+        return $this->join_date ? Carbon::parse($this->join_date)->diffInYears(now()) : null;
     }
 }
