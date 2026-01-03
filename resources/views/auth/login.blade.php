@@ -116,13 +116,22 @@
                     <div class="flex-1 border-t border-gray-300"></div>
                 </div>
 
-                {{-- Register Link --}}
-                <p class="text-center text-gray-700 text-sm">
-                    <span class="text-gray-600">Belum punya akun? </span>
-                    <a href="{{ route('register') }}" class="font-bold text-blue-600 hover:text-blue-700 hover:underline transition">
-                        Daftar Sekarang
-                    </a>
-                </p>
+                {{-- Login Options & Register Link --}}
+                <div class="space-y-3">
+                    <p class="text-center text-gray-700 text-sm">
+                        <span class="text-gray-600">Belum punya akun? </span>
+                        <a href="{{ route('register') }}" class="font-bold text-blue-600 hover:text-blue-700 hover:underline transition">
+                            Daftar Sekarang
+                        </a>
+                    </p>
+
+                    <div class="pt-4 border-t border-gray-200">
+                        <p class="text-center text-xs text-gray-500 font-medium mb-3">Atau login sebagai:</p>
+                        <a href="{{ route('mustahik.login') }}" class="block w-full bg-gradient-to-r from-amber-600 to-orange-600 text-white font-bold py-2.5 rounded-lg hover:from-amber-700 hover:to-orange-700 transition duration-300 text-center">
+                            <i class="fas fa-heart mr-2"></i>Login Mustahik
+                        </a>
+                    </div>
+                </div>
 
                 {{-- Footer Info --}}
                 <div class="mt-6 pt-6 border-t border-gray-200">

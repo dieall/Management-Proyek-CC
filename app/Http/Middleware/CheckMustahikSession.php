@@ -15,7 +15,7 @@ class CheckMustahikSession // Pastikan nama class ini benar
             if (Auth::check()) {
                 Auth::logout();
             }
-            return redirect()->route('login')->with('error', 'Akses ditolak. Silakan login sebagai Mustahik.');
+            return redirect()->route('mustahik.login')->with('error', 'Akses ditolak. Silakan login sebagai Mustahik.');
         }
         
         return $next($request);

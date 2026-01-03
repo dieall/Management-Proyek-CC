@@ -106,6 +106,17 @@
                                     <i class="fas fa-sign-out-alt mr-1"></i> <span class="hidden sm:inline">Logout</span>
                                 </button>
                             </form>
+                        @elseif(session('mustahik_id'))
+                            <span class="text-sm md:text-base font-semibold flex items-center space-x-3">
+                                <i class="fas fa-user-circle mr-1"></i>
+                                <span class="hidden sm:inline">{{ session('mustahik_nama') }}</span>
+                            </span>
+                            <form action="{{ route('mustahik.logout') }}" method="POST" class="inline">
+                                @csrf
+                                <button type="submit" class="text-xs md:text-sm text-red-600 hover:text-red-800 px-2 md:px-0">
+                                    <i class="fas fa-sign-out-alt mr-1"></i> <span class="hidden sm:inline">Logout</span>
+                                </button>
+                            </form>
                         @endauth
                     </div>
                 </div>

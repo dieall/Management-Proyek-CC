@@ -50,15 +50,15 @@ class DashboardController extends Controller
         // Ambil data untuk tabel approval MUZAKKI
         $muzakkiPending = Muzakki::where('status_pendaftaran', 'menunggu')
                                  ->with('user')
-                                 ->orderBy('tgl_daftar', 'asc')
+                                 ->orderBy('tgl_daftar', 'desc')
                                  ->limit(10)
                                  ->get();
                                  
         // --- TAMBAHAN BARU: MUSTAHIK PENDING ---
-$mustahikPending = Mustahik::where('status_verifikasi', 'pending')
-                           ->orderBy('created_at', 'asc')
-                           ->limit(10)
-                           ->get();
+        $mustahikPending = Mustahik::where('status_verifikasi', 'pending')
+                                   ->orderBy('tgl_daftar', 'desc')
+                                   ->limit(10)
+                                   ->get();
 
         // Ambil Transaksi Terbaru
         $recentZis = ZisMasuk::with('muzakki')->orderBy('tgl_masuk', 'desc')->limit(5)->get();

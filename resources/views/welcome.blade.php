@@ -67,22 +67,22 @@
                 <h2 class="text-3xl font-bold text-gray-800 mb-8">Mulai Sekarang</h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                    {{-- Login Button --}}
+                    {{-- Login Muzakki Button --}}
                     <a href="{{ route('login') }}" class="group bg-gradient-to-br from-blue-600 to-blue-700 text-white px-8 py-4 rounded-lg hover:shadow-xl transition transform hover:-translate-y-1 font-semibold text-lg">
                         <div class="flex flex-col items-center">
                             <i class="fas fa-sign-in-alt text-3xl mb-3 group-hover:scale-110 transition"></i>
-                            <span>Login</span>
+                            <span>Login Muzakki</span>
                         </div>
-                        <p class="text-xs mt-2 text-blue-100">Masuk ke akun Anda</p>
+                        <p class="text-xs mt-2 text-blue-100">Pembayar Zakat</p>
                     </a>
 
-                    {{-- Daftar Jemaah Button --}}
-                    <a href="{{ route('register') }}" class="group bg-gradient-to-br from-purple-600 to-purple-700 text-white px-8 py-4 rounded-lg hover:shadow-xl transition transform hover:-translate-y-1 font-semibold text-lg">
+                    {{-- Login Mustahik Button --}}
+                    <a href="{{ route('mustahik.login') }}" class="group bg-gradient-to-br from-amber-600 to-orange-700 text-white px-8 py-4 rounded-lg hover:shadow-xl transition transform hover:-translate-y-1 font-semibold text-lg">
                         <div class="flex flex-col items-center">
-                            <i class="fas fa-user-plus text-3xl mb-3 group-hover:scale-110 transition"></i>
-                            <span>Daftar Jemaah</span>
+                            <i class="fas fa-heart text-3xl mb-3 group-hover:scale-110 transition"></i>
+                            <span>Login Mustahik</span>
                         </div>
-                        <p class="text-xs mt-2 text-purple-100">Sebagai Pembayar Zakat</p>
+                        <p class="text-xs mt-2 text-amber-100">Penerima Zakat</p>
                     </a>
 
                     {{-- Daftar Mustahik Button --}}
@@ -91,12 +91,12 @@
                             <i class="fas fa-hand-holding text-3xl mb-3 group-hover:scale-110 transition"></i>
                             <span>Daftar Mustahik</span>
                         </div>
-                        <p class="text-xs mt-2 text-green-100">Sebagai Penerima Zakat</p>
+                        <p class="text-xs mt-2 text-green-100">Pendaftar Baru</p>
                     </a>
                 </div>
 
                 <p class="text-gray-600 text-sm">
-                    Pilih opsi di atas untuk memulai. Jika Anda sudah memiliki akun, silakan <a href="{{ route('login') }}" class="text-blue-600 hover:underline font-semibold">login</a>
+                    Belum punya akun? <a href="{{ route('register') }}" class="text-blue-600 hover:underline font-semibold">Daftar sebagai Muzakki</a>
                 </p>
             </div>
             @else

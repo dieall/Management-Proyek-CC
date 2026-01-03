@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\MustahikLoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MustahikController;
 use App\Http\Controllers\MuzakkiController;
@@ -23,9 +24,13 @@ Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
     Route::post('register', [RegisteredUserController::class, 'store']);
     
-    // Login
+    // Login Muzakki
     Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    
+    // Login Mustahik
+    Route::get('login/mustahik', [MustahikLoginController::class, 'create'])->name('mustahik.login');
+    Route::post('login/mustahik', [MustahikLoginController::class, 'store'])->name('mustahik.login.store');
     
     // Daftar Mustahik (Rute Khusus)
     Route::get('/daftar/mustahik', [MustahikRegistrationController::class, 'create'])->name('mustahik.register');
@@ -34,6 +39,9 @@ Route::middleware('guest')->group(function () {
 
 // Logout
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+
+// Logout Mustahik
+Route::post('logout/mustahik', [MustahikLoginController::class, 'destroy'])->name('mustahik.logout');
 
 
 // --- Protected Routes (Auth Guard: User/Admin/Petugas) ---
