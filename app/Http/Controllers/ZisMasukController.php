@@ -11,6 +11,13 @@ class ZisMasukController extends Controller
 {
     public function index()
     {
+        $user = auth()->user();
+        
+        // Jika user adalah muzakki, redirect ke halaman riwayat mereka sendiri
+        if ($user->isMuzakki() && $user->muzakki) {
+            return redirect()->route('zis-masuk.my-zis');
+        }
+        
         $zisMasuk = ZisMasuk::with('muzakki')->orderBy('tgl_masuk', 'desc')->get();
         
         // Statistik
@@ -21,6 +28,31 @@ class ZisMasukController extends Controller
         $totalWakaf = ZisMasuk::where('jenis_zis', 'wakaf')->sum('jumlah');
         
         return view('zis.zis-masuk.index', compact('zisMasuk', 'totalZIS', 'totalZakat', 'totalInfaq', 'totalShadaqah', 'totalWakaf'));
+    }
+
+    // Riwayat ZIS untuk Muzakki sendiri
+    public function myZis()
+    {
+        $user = auth()->user();
+        
+        if (!$user->isMuzakki() || !$user->muzakki) {
+            abort(403, 'Hanya muzakki yang dapat mengakses halaman ini.');
+        }
+        
+        $muzakki = $user->muzakki;
+        $zisMasuk = ZisMasuk::where('id_muzakki', $muzakki->id_muzakki)
+                            ->with('penyaluran.mustahik')
+                            ->orderBy('tgl_masuk', 'desc')
+                            ->get();
+        
+        // Statistik untuk muzakki ini
+        $totalZIS = $zisMasuk->sum('jumlah');
+        $totalZakat = $zisMasuk->where('jenis_zis', 'zakat')->sum('jumlah');
+        $totalInfaq = $zisMasuk->where('jenis_zis', 'infaq')->sum('jumlah');
+        $totalShadaqah = $zisMasuk->where('jenis_zis', 'shadaqah')->sum('jumlah');
+        $totalWakaf = $zisMasuk->where('jenis_zis', 'wakaf')->sum('jumlah');
+        
+        return view('zis.zis-masuk.my-zis', compact('zisMasuk', 'muzakki', 'totalZIS', 'totalZakat', 'totalInfaq', 'totalShadaqah', 'totalWakaf'));
     }
 
     public function create()

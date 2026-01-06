@@ -37,13 +37,9 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="jenis_hewan">Jenis Hewan <span class="text-danger">*</span></label>
-                        <select class="form-control @error('jenis_hewan') is-invalid @enderror" 
-                                id="jenis_hewan" name="jenis_hewan" required>
-                            <option value="">Pilih Jenis Hewan</option>
-                            <option value="sapi" {{ old('jenis_hewan') == 'sapi' ? 'selected' : '' }}>Sapi</option>
-                            <option value="kambing" {{ old('jenis_hewan') == 'kambing' ? 'selected' : '' }}>Kambing</option>
-                            <option value="domba" {{ old('jenis_hewan') == 'domba' ? 'selected' : '' }}>Domba</option>
-                        </select>
+                        <input type="text" class="form-control @error('jenis_hewan') is-invalid @enderror" 
+                               id="jenis_hewan" name="jenis_hewan" value="{{ old('jenis_hewan') }}" 
+                               placeholder="Contoh: Sapi, Kambing, Domba" required>
                         @error('jenis_hewan')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror

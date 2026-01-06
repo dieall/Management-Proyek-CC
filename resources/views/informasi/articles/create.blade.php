@@ -12,7 +12,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Form Artikel/Pengumuman</h6>
     </div>
     <div class="card-body">
-        <form action="{{ route('articles.store') }}" method="POST">
+        <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             
             <div class="form-group">
@@ -46,12 +46,12 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="image_url">URL Gambar (Opsional)</label>
-                        <input type="url" class="form-control @error('image_url') is-invalid @enderror" 
-                               id="image_url" name="image_url" value="{{ old('image_url') }}" 
-                               placeholder="https://example.com/image.jpg">
-                        @error('image_url')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                        <label for="image">Gambar (Opsional)</label>
+                        <input type="file" class="form-control-file @error('image') is-invalid @enderror" 
+                               id="image" name="image" accept="image/*">
+                        <small class="form-text text-muted">Format: JPG, PNG, maksimal 2MB</small>
+                        @error('image')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
@@ -100,6 +100,7 @@
     </div>
 </div>
 @endsection
+
 
 
 

@@ -105,6 +105,28 @@ class DashboardController extends Controller
         $totalPenyaluran = Penyaluran::sum('jumlah');
         $saldoZIS = $totalZISMasuk - $totalPenyaluran;
 
+        // Statistik bulanan untuk Muzakki & Mustahik (bulan berjalan)
+        $startOfMonth = now()->startOfMonth();
+        $endOfMonth = now()->endOfMonth();
+
+        // Total ZIS masuk dari Muzakki bulan ini
+        $zisMasukBulanIni = ZisMasuk::whereBetween('tgl_masuk', [$startOfMonth, $endOfMonth])->sum('jumlah');
+
+        // Total penyaluran kepada Mustahik bulan ini
+        $penyaluranBulanIni = Penyaluran::whereBetween('tgl_salur', [$startOfMonth, $endOfMonth])->sum('jumlah');
+
+        // Jumlah Muzakki baru yang disetujui bulan ini
+        $muzakkiBaruBulanIni = Muzakki::disetujui()
+            ->whereBetween('tgl_daftar', [$startOfMonth, $endOfMonth])
+            ->count();
+
+        // Jumlah Mustahik yang menerima penyaluran bulan ini
+        $mustahikTerbantuBulanIni = Mustahik::whereHas('penyaluran', function ($query) use ($startOfMonth, $endOfMonth) {
+                $query->whereBetween('tgl_salur', [$startOfMonth, $endOfMonth]);
+            })
+            ->distinct('id_mustahik')
+            ->count();
+
         return view('dashboard', compact(
             // Inventaris/Aset
             'totalAset',
@@ -137,7 +159,12 @@ class DashboardController extends Controller
             'totalShadaqah',
             'totalWakaf',
             'totalPenyaluran',
-            'saldoZIS'
+            'saldoZIS',
+            // Statistik bulanan Muzakki & Mustahik
+            'zisMasukBulanIni',
+            'penyaluranBulanIni',
+            'muzakkiBaruBulanIni',
+            'mustahikTerbantuBulanIni'
         ));
     }
 }

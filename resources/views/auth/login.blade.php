@@ -29,7 +29,7 @@
                                 <div class="text-center text-white p-5">
                                     <i class="fas fa-mosque fa-5x mb-4"></i>
                                     <h2 class="font-weight-bold">Sistem Manajemen</h2>
-                                    <h3 class="font-weight-bold">Masjid Al-Nassr</h3>
+                                    <h3 class="font-weight-bold">Masjid Al-Ikhlas</h3>
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -84,7 +84,9 @@
                                             Admin: admin / admin123<br>
                                             DKM: dkm / dkm123<br>
                                             Panitia: Hasan / panitia123<br>
-                                            Jemaah: jamaah / jamaah123
+                                            Jemaah: jamaah / jamaah123<br>
+                                            Muzakki : muzakki1 / password<br>
+                                            Mustahik : mustahik1 / password<br>
                                         </small>
                                     </div>
                                 </div>

@@ -405,21 +405,43 @@
     <div class="col-xl-6 col-lg-6">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Informasi Mustahik</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Informasi Mustahik & Statistik Bulanan</h6>
             </div>
             <div class="card-body">
-                <div class="text-center mb-3">
-                    <h3 class="text-primary">{{ $totalMustahik }}</h3>
-                    <p class="text-muted mb-0">Mustahik Aktif</p>
-                </div>
-                <hr>
-                <div class="text-center">
-                    <a href="{{ route('mustahik.index') }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-users"></i> Kelola Mustahik
-                    </a>
-                    <a href="{{ route('penyaluran.index') }}" class="btn btn-success btn-sm">
-                        <i class="fas fa-share-square"></i> Penyaluran ZIS
-                    </a>
+                <div class="row">
+                    <div class="col-md-6 text-center mb-3">
+                        <h3 class="text-primary">{{ $totalMustahik }}</h3>
+                        <p class="text-muted mb-0">Mustahik Aktif</p>
+                        <div class="mt-3">
+                            <a href="{{ route('mustahik.index') }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-users"></i> Kelola Mustahik
+                            </a>
+                            <a href="{{ route('penyaluran.index') }}" class="btn btn-success btn-sm">
+                                <i class="fas fa-share-square"></i> Penyaluran ZIS
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted">Statistik Bulan {{ now()->format('F Y') }}</h6>
+                        <ul class="list-unstyled mt-2 mb-0">
+                            <li class="mb-1">
+                                <strong>Muzakki Baru:</strong>
+                                <span class="text-primary">{{ $muzakkiBaruBulanIni }}</span>
+                            </li>
+                            <li class="mb-1">
+                                <strong>Mustahik Terbantu:</strong>
+                                <span class="text-success">{{ $mustahikTerbantuBulanIni }}</span>
+                            </li>
+                            <li class="mb-1">
+                                <strong>ZIS Masuk Bulan Ini:</strong>
+                                <span class="text-info">Rp {{ number_format($zisMasukBulanIni, 0, ',', '.') }}</span>
+                            </li>
+                            <li>
+                                <strong>Penyaluran Bulan Ini:</strong>
+                                <span class="text-warning">Rp {{ number_format($penyaluranBulanIni, 0, ',', '.') }}</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

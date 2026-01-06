@@ -24,6 +24,10 @@ use App\Http\Controllers\DutyScheduleController;
 use App\Http\Controllers\TaskAssignmentController;
 use App\Http\Controllers\OrganizationalStructureController;
 use App\Http\Controllers\KurbanController;
+use App\Http\Controllers\LandingPageController;
+
+// Landing Page (Public)
+Route::get('/', [LandingPageController::class, 'index'])->name('landing');
 
 // Login Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -32,10 +36,13 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Protected Routes
 Route::middleware(['auth'])->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     // Event Routes
     Route::resource('events', EventController::class);
+    Route::post('events/{id}/daftar', [EventController::class, 'daftar'])->name('events.daftar');
+    Route::get('events/{id}/peserta', [EventController::class, 'peserta'])->name('events.peserta');
+    Route::post('events/{id}/absensi', [EventController::class, 'updateAbsensi'])->name('events.absensi');
     
     // Aset Routes
     Route::resource('aset', AsetController::class);
@@ -65,6 +72,9 @@ Route::middleware(['auth'])->group(function () {
     // Kurban Routes
     Route::resource('kurban', KurbanController::class);
     Route::post('kurban/{id}/submit', [KurbanController::class, 'submitPendaftaran'])->name('kurban.submit');
+    Route::patch('kurban/status/{id}', [KurbanController::class, 'updateStatus'])->name('kurban.update-status');
+    Route::post('kurban/dokumentasi/upload', [KurbanController::class, 'uploadDokumentasi'])->name('kurban.upload-dokumentasi');
+    Route::delete('kurban/dokumentasi/{id}', [KurbanController::class, 'deleteDokumentasi'])->name('kurban.delete-dokumentasi');
     Route::get('my-kurban', [KurbanController::class, 'myKurban'])->name('kurban.my-kurban');
     
     // ZIS Management Routes
@@ -76,9 +86,11 @@ Route::middleware(['auth'])->group(function () {
     
     Route::resource('zis-masuk', ZisMasukController::class);
     Route::get('zis-masuk-laporan', [ZisMasukController::class, 'laporan'])->name('zis-masuk.laporan');
+    Route::get('my-zis', [ZisMasukController::class, 'myZis'])->name('zis-masuk.my-zis');
     
     Route::resource('penyaluran', PenyaluranController::class);
     Route::get('penyaluran-laporan', [PenyaluranController::class, 'laporan'])->name('penyaluran.laporan');
+    Route::get('my-penyaluran', [PenyaluranController::class, 'myPenyaluran'])->name('penyaluran.my-penyaluran');
     
     // Informasi & Pengumuman Routes
     Route::resource('articles', ArticleController::class);

@@ -15,19 +15,19 @@ class EventController extends Controller
         
         // Admin & DKM bisa lihat semua event
         if ($user->isAdmin() || $user->isSuperAdmin() || $user->isDkm()) {
-            $events = Event::with('creator')->latest()->paginate(10);
+            $events = Event::with(['creator', 'peserta'])->latest()->paginate(10);
         }
         // Panitia hanya bisa lihat event yang mereka buat
         elseif ($user->isPanitia()) {
             $events = Event::where('created_by', $user->id)
-                          ->with('creator')
+                          ->with(['creator', 'peserta'])
                           ->latest()
                           ->paginate(10);
         }
         // Jemaah hanya bisa lihat event yang published
         else {
             $events = Event::where('status', 'published')
-                          ->with('creator')
+                          ->with(['creator', 'peserta'])
                           ->latest()
                           ->paginate(10);
         }
@@ -75,8 +75,16 @@ class EventController extends Controller
 
     public function show(string $id)
     {
-        $event = Event::with('creator')->findOrFail($id);
-        return view('events.show', compact('event'));
+        $event = Event::with(['creator', 'peserta'])->findOrFail($id);
+        $user = Auth::user();
+        
+        // Cek apakah user sudah terdaftar (untuk jemaah)
+        $isRegistered = false;
+        if ($user->isJemaah()) {
+            $isRegistered = $event->peserta()->where('user_id', $user->id)->exists();
+        }
+        
+        return view('events.show', compact('event', 'isRegistered'));
     }
 
     public function edit(string $id)
@@ -152,6 +160,92 @@ class EventController extends Controller
         $event->delete();
 
         return redirect()->route('events.index')->with('success', 'Event berhasil dihapus!');
+    }
+
+    // Daftarkan jemaah ke event
+    public function daftar(Request $request, string $id)
+    {
+        $event = Event::findOrFail($id);
+        $user = Auth::user();
+
+        // Hanya jemaah yang bisa mendaftar
+        if (!$user->isJemaah()) {
+            abort(403, 'Hanya jemaah yang dapat mendaftar event.');
+        }
+
+        // Cek apakah event sudah published
+        if ($event->status !== 'published') {
+            return back()->with('error', 'Event belum dipublikasikan.');
+        }
+
+        // Cek apakah sudah terdaftar
+        if ($event->peserta()->where('user_id', $user->id)->exists()) {
+            return back()->with('error', 'Anda sudah terdaftar di event ini!');
+        }
+
+        // Cek kuota jika ada
+        if ($event->kuota && $event->peserta()->count() >= $event->kuota) {
+            return back()->with('error', 'Kuota event sudah penuh.');
+        }
+
+        // Daftarkan peserta
+        $event->peserta()->attach($user->id, [
+            'tanggal_daftar' => now()->toDateString(),
+            'status_kehadiran' => 'terdaftar',
+        ]);
+
+        // Update jumlah attendees
+        $event->update(['attendees' => $event->peserta()->count()]);
+
+        return back()->with('success', 'Berhasil mendaftar event!');
+    }
+
+    // List peserta event (untuk admin)
+    public function peserta(string $id)
+    {
+        $event = Event::with(['peserta' => function($query) {
+            $query->orderBy('nama_lengkap');
+        }])->findOrFail($id);
+        
+        $user = Auth::user();
+        
+        // Hanya admin, superadmin, dkm, atau panitia yang membuat event yang bisa lihat peserta
+        if (!$user->isAdmin() && !$user->isSuperAdmin() && !$user->isDkm() && 
+            ($event->created_by != $user->id || !$user->isPanitia())) {
+            abort(403, 'Anda tidak memiliki akses untuk melihat peserta event.');
+        }
+
+        return view('events.peserta', compact('event'));
+    }
+
+    // Update absensi peserta (untuk admin)
+    public function updateAbsensi(Request $request, string $id)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'status_kehadiran' => 'required|in:terdaftar,hadir,izin,alpa',
+        ]);
+
+        $event = Event::findOrFail($id);
+        $user = Auth::user();
+        
+        // Hanya admin, superadmin, dkm, atau panitia yang membuat event yang bisa update absensi
+        if (!$user->isAdmin() && !$user->isSuperAdmin() && !$user->isDkm() && 
+            ($event->created_by != $user->id || !$user->isPanitia())) {
+            abort(403, 'Anda tidak memiliki akses untuk mengupdate absensi.');
+        }
+
+        // Cek apakah user terdaftar di event
+        if (!$event->peserta()->where('user_id', $request->user_id)->exists()) {
+            return back()->with('error', 'Peserta tidak terdaftar di event ini.');
+        }
+
+        // Update status kehadiran
+        $event->peserta()->updateExistingPivot($request->user_id, [
+            'status_kehadiran' => $request->status_kehadiran,
+        ]);
+
+        return back()->with('success', 'Status kehadiran berhasil diperbarui!');
     }
 }
 

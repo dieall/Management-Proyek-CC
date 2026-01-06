@@ -15,7 +15,7 @@ class InformasiPengumumanSeeder extends Seeder
     {
         // Seed Masjid (Info Masjid)
         DB::table('masjids')->insert([
-            'name' => 'Masjid Al-Nassr',
+            'name' => 'Masjid Al-Ikhlas',
             'address' => 'Jl. Raya Masjid No. 123, Jakarta Selatan',
             'phone' => '021-12345678',
             'email' => 'info@alnassr.id',
@@ -27,7 +27,7 @@ class InformasiPengumumanSeeder extends Seeder
         $articles = [
             [
                 'title' => 'Jual Beli Sapi Kurban',
-                'description' => 'Masjid Al-Nassr membuka pendaftaran jual beli sapi kurban tahun ini dengan harga terjangkau untuk jemaah.',
+                'description' => 'Masjid Al-Ikhlas membuka pendaftaran jual beli sapi kurban tahun ini dengan harga terjangkau untuk jemaah.',
                 'content' => 'Pendaftaran sapi kurban dibuka mulai tanggal 1 Januari hingga 1 Juni. Hubungi DKM untuk informasi lebih lanjut mengenai jenis dan harga sapi kurban.',
                 'image_url' => null,
                 'link_url' => null,

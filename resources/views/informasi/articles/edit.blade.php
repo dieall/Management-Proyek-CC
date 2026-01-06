@@ -12,7 +12,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Form Edit Artikel</h6>
     </div>
     <div class="card-body">
-        <form action="{{ route('articles.update', $article->id) }}" method="POST">
+        <form action="{{ route('articles.update', $article->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             
@@ -46,11 +46,17 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="image_url">URL Gambar (Opsional)</label>
-                        <input type="url" class="form-control @error('image_url') is-invalid @enderror" 
-                               id="image_url" name="image_url" value="{{ old('image_url', $article->image_url) }}">
-                        @error('image_url')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                        <label for="image">Gambar (Opsional)</label>
+                        @if($article->image_url)
+                            <div class="mb-2">
+                                <img src="{{ $article->image_url }}" alt="{{ $article->title }}" class="img-fluid rounded" style="max-height: 150px; object-fit: cover;">
+                            </div>
+                        @endif
+                        <input type="file" class="form-control-file @error('image') is-invalid @enderror" 
+                               id="image" name="image" accept="image/*">
+                        <small class="form-text text-muted">Biarkan kosong jika tidak ingin mengubah gambar. Format: JPG, PNG, maksimal 2MB</small>
+                        @error('image')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
@@ -97,6 +103,7 @@
     </div>
 </div>
 @endsection
+
 
 
 

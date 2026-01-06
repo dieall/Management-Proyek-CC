@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>@yield('title', 'Sistem Manajemen Masjid Al-Nassr')</title>
+    <title>@yield('title', 'Sistem Manajemen Masjid Al-Ikhlas')</title>
 
     <!-- Custom fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
@@ -28,7 +28,7 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-mosque"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">Masjid Al-Nassr</div>
+                <div class="sidebar-brand-text mx-3">Masjid Al-Ikhlas</div>
             </a>
 
             <!-- Divider -->
@@ -45,187 +45,311 @@
             <!-- Divider -->
             <hr class="sidebar-divider">
 
-            <!-- Heading -->
-            <div class="sidebar-heading">Manajemen</div>
+            @if(auth()->user()->isMuzakki())
+                <!-- Menu khusus untuk Muzakki -->
+                <div class="sidebar-heading">Menu Muzakki</div>
 
-            <!-- Nav Item - Event -->
-            <li class="nav-item {{ request()->routeIs('events.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('events.index') }}">
-                    <i class="fas fa-fw fa-calendar-check"></i>
-                    <span>Event Masjid</span>
-                </a>
-            </li>
+                <li class="nav-item {{ request()->routeIs('zis-masuk.my-zis') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('zis-masuk.my-zis') }}">
+                        <i class="fas fa-fw fa-hand-holding-usd"></i>
+                        <span>Riwayat ZIS Saya</span>
+                    </a>
+                </li>
 
-            <!-- Nav Item - Aset -->
-            <li class="nav-item {{ request()->routeIs('aset.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('aset.index') }}">
-                    <i class="fas fa-fw fa-box"></i>
-                    <span>Inventaris/Aset</span>
-                </a>
-            </li>
+                <!-- Divider -->
+                <hr class="sidebar-divider">
 
-            <!-- Nav Item - Jadwal Perawatan -->
-            <li class="nav-item {{ request()->routeIs('jadwal-perawatan.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('jadwal-perawatan.index') }}">
-                    <i class="fas fa-fw fa-calendar-alt"></i>
-                    <span>Jadwal Perawatan</span>
-                </a>
-            </li>
+                <div class="sidebar-heading">Informasi</div>
 
-            <!-- Nav Item - Laporan Perawatan -->
-            <li class="nav-item {{ request()->routeIs('laporan-perawatan.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('laporan-perawatan.index') }}">
-                    <i class="fas fa-fw fa-clipboard-list"></i>
-                    <span>Laporan Perawatan</span>
-                </a>
-            </li>
+                <li class="nav-item {{ request()->routeIs('articles.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('articles.index') }}">
+                        <i class="fas fa-fw fa-newspaper"></i>
+                        <span>Artikel & Pengumuman</span>
+                    </a>
+                </li>
 
-            <!-- Nav Item - Kegiatan -->
-            <li class="nav-item {{ request()->routeIs('kegiatan.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('kegiatan.index') }}">
-                    <i class="fas fa-fw fa-users"></i>
-                    <span>Kegiatan Masjid</span>
-                </a>
-            </li>
+                <li class="nav-item {{ request()->routeIs('prayer-schedules.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('prayer-schedules.index') }}">
+                        <i class="fas fa-fw fa-pray"></i>
+                        <span>Jadwal Sholat</span>
+                    </a>
+                </li>
+            @elseif(auth()->user()->isMustahik())
+                <!-- Menu khusus untuk Mustahik -->
+                <div class="sidebar-heading">Menu Mustahik</div>
 
-            <!-- Nav Item - Donasi -->
-            <li class="nav-item {{ request()->routeIs('donasi.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('donasi.index') }}">
-                    <i class="fas fa-fw fa-hand-holding-heart"></i>
-                    <span>Program Donasi</span>
-                </a>
-            </li>
+                <li class="nav-item {{ request()->routeIs('penyaluran.my-penyaluran') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('penyaluran.my-penyaluran') }}">
+                        <i class="fas fa-fw fa-gift"></i>
+                        <span>Riwayat Penyaluran Saya</span>
+                    </a>
+                </li>
 
-            <!-- Nav Item - Kurban -->
-            <li class="nav-item {{ request()->routeIs('kurban.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('kurban.index') }}">
-                    <i class="fas fa-fw fa-drumstick-bite"></i>
-                    <span>Program Kurban</span>
-                </a>
-            </li>
+                <!-- Divider -->
+                <hr class="sidebar-divider">
 
-            <!-- Divider -->
-            <hr class="sidebar-divider">
+                <div class="sidebar-heading">Informasi</div>
 
-            <!-- Heading -->
-            <div class="sidebar-heading">Manajemen ZIS</div>
+                <li class="nav-item {{ request()->routeIs('articles.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('articles.index') }}">
+                        <i class="fas fa-fw fa-newspaper"></i>
+                        <span>Artikel & Pengumuman</span>
+                    </a>
+                </li>
 
-            <!-- Nav Item - Muzakki -->
-            <li class="nav-item {{ request()->routeIs('muzakki.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('muzakki.index') }}">
-                    <i class="fas fa-fw fa-user-tie"></i>
-                    <span>Muzakki</span>
-                </a>
-            </li>
+                <li class="nav-item {{ request()->routeIs('prayer-schedules.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('prayer-schedules.index') }}">
+                        <i class="fas fa-fw fa-pray"></i>
+                        <span>Jadwal Sholat</span>
+                    </a>
+                </li>
+            @elseif(auth()->user()->isAdmin() || auth()->user()->isSuperAdmin() || auth()->user()->isDkm() || auth()->user()->isPanitia())
+                <!-- Heading -->
+                <div class="sidebar-heading">Manajemen</div>
 
-            <!-- Nav Item - Mustahik -->
-            <li class="nav-item {{ request()->routeIs('mustahik.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('mustahik.index') }}">
-                    <i class="fas fa-fw fa-user-friends"></i>
-                    <span>Mustahik</span>
-                </a>
-            </li>
+                <!-- Nav Item - Event -->
+                <li class="nav-item {{ request()->routeIs('events.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('events.index') }}">
+                        <i class="fas fa-fw fa-calendar-check"></i>
+                        <span>Event Masjid</span>
+                    </a>
+                </li>
 
-            <!-- Nav Item - ZIS Masuk -->
-            <li class="nav-item {{ request()->routeIs('zis-masuk.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('zis-masuk.index') }}">
-                    <i class="fas fa-fw fa-hand-holding-usd"></i>
-                    <span>ZIS Masuk</span>
-                </a>
-            </li>
+                <!-- Nav Item - Aset -->
+                <li class="nav-item {{ request()->routeIs('aset.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('aset.index') }}">
+                        <i class="fas fa-fw fa-box"></i>
+                        <span>Inventaris/Aset</span>
+                    </a>
+                </li>
 
-            <!-- Nav Item - Penyaluran -->
-            <li class="nav-item {{ request()->routeIs('penyaluran.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('penyaluran.index') }}">
-                    <i class="fas fa-fw fa-share-square"></i>
-                    <span>Penyaluran ZIS</span>
-                </a>
-            </li>
+                <!-- Nav Item - Jadwal Perawatan -->
+                <li class="nav-item {{ request()->routeIs('jadwal-perawatan.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('jadwal-perawatan.index') }}">
+                        <i class="fas fa-fw fa-calendar-alt"></i>
+                        <span>Jadwal Perawatan</span>
+                    </a>
+                </li>
 
-            <!-- Divider -->
-            <hr class="sidebar-divider">
+                <!-- Nav Item - Laporan Perawatan -->
+                <li class="nav-item {{ request()->routeIs('laporan-perawatan.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('laporan-perawatan.index') }}">
+                        <i class="fas fa-fw fa-clipboard-list"></i>
+                        <span>Laporan Perawatan</span>
+                    </a>
+                </li>
 
-            <!-- Heading -->
-            <div class="sidebar-heading">Manajemen Takmir</div>
+                <!-- Nav Item - Kegiatan -->
+                <li class="nav-item {{ request()->routeIs('kegiatan.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('kegiatan.index') }}">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Kegiatan Masjid</span>
+                    </a>
+                </li>
 
-            <!-- Nav Item - Posisi -->
-            <li class="nav-item {{ request()->routeIs('positions.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('positions.index') }}">
-                    <i class="fas fa-fw fa-briefcase"></i>
-                    <span>Posisi/Jabatan</span>
-                </a>
-            </li>
+                <!-- Nav Item - Donasi -->
+                <li class="nav-item {{ request()->routeIs('donasi.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('donasi.index') }}">
+                        <i class="fas fa-fw fa-hand-holding-heart"></i>
+                        <span>Program Donasi</span>
+                    </a>
+                </li>
 
-            <!-- Nav Item - Pengurus -->
-            <li class="nav-item {{ request()->routeIs('committees.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('committees.index') }}">
-                    <i class="fas fa-fw fa-users-cog"></i>
-                    <span>Data Pengurus</span>
-                </a>
-            </li>
+                <!-- Nav Item - Kurban -->
+                <li class="nav-item {{ request()->routeIs('kurban.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('kurban.index') }}">
+                        <i class="fas fa-fw fa-drumstick-bite"></i>
+                        <span>Program Kurban</span>
+                    </a>
+                </li>
 
-            <!-- Nav Item - Tugas & Tanggung Jawab -->
-            <li class="nav-item {{ request()->routeIs('job-responsibilities.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('job-responsibilities.index') }}">
-                    <i class="fas fa-fw fa-tasks"></i>
-                    <span>Tugas & Tanggung Jawab</span>
-                </a>
-            </li>
+                <!-- Divider -->
+                <hr class="sidebar-divider">
 
-            <!-- Nav Item - Jadwal Piket -->
-            <li class="nav-item {{ request()->routeIs('duty-schedules.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('duty-schedules.index') }}">
-                    <i class="fas fa-fw fa-calendar-week"></i>
-                    <span>Jadwal Piket</span>
-                </a>
-            </li>
+                <!-- Heading -->
+                <div class="sidebar-heading">Manajemen ZIS</div>
 
-            <!-- Nav Item - Penugasan Tugas -->
-            <li class="nav-item {{ request()->routeIs('task-assignments.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('task-assignments.index') }}">
-                    <i class="fas fa-fw fa-clipboard-check"></i>
-                    <span>Penugasan Tugas</span>
-                </a>
-            </li>
+                <!-- Nav Item - Muzakki -->
+                <li class="nav-item {{ request()->routeIs('muzakki.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('muzakki.index') }}">
+                        <i class="fas fa-fw fa-user-tie"></i>
+                        <span>Muzakki</span>
+                    </a>
+                </li>
 
-            <!-- Nav Item - Struktur Organisasi -->
-            <li class="nav-item {{ request()->routeIs('organizational-structures.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('organizational-structures.index') }}">
-                    <i class="fas fa-fw fa-sitemap"></i>
-                    <span>Struktur Organisasi</span>
-                </a>
-            </li>
+                <!-- Nav Item - Mustahik -->
+                <li class="nav-item {{ request()->routeIs('mustahik.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('mustahik.index') }}">
+                        <i class="fas fa-fw fa-user-friends"></i>
+                        <span>Mustahik</span>
+                    </a>
+                </li>
 
-            <!-- Divider -->
-            <hr class="sidebar-divider">
+                <!-- Nav Item - ZIS Masuk -->
+                <li class="nav-item {{ request()->routeIs('zis-masuk.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('zis-masuk.index') }}">
+                        <i class="fas fa-fw fa-hand-holding-usd"></i>
+                        <span>ZIS Masuk</span>
+                    </a>
+                </li>
 
-            <!-- Heading -->
-            <div class="sidebar-heading">Informasi</div>
+                <!-- Nav Item - Penyaluran -->
+                <li class="nav-item {{ request()->routeIs('penyaluran.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('penyaluran.index') }}">
+                        <i class="fas fa-fw fa-share-square"></i>
+                        <span>Penyaluran ZIS</span>
+                    </a>
+                </li>
 
-            <!-- Nav Item - Artikel & Pengumuman -->
-            <li class="nav-item {{ request()->routeIs('articles.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('articles.index') }}">
-                    <i class="fas fa-fw fa-newspaper"></i>
-                    <span>Artikel & Pengumuman</span>
-                </a>
-            </li>
+                <!-- Divider -->
+                <hr class="sidebar-divider">
 
-            <!-- Nav Item - Jadwal Sholat -->
-            <li class="nav-item {{ request()->routeIs('prayer-schedules.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('prayer-schedules.index') }}">
-                    <i class="fas fa-fw fa-pray"></i>
-                    <span>Jadwal Sholat</span>
-                </a>
-            </li>
+                <!-- Heading -->
+                <div class="sidebar-heading">Manajemen Takmir</div>
 
-            @if(auth()->user()->isAdmin() || auth()->user()->isSuperAdmin())
-            <!-- Nav Item - Log Aktivitas -->
-            <li class="nav-item {{ request()->routeIs('log-aktivitas.*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('log-aktivitas.index') }}">
-                    <i class="fas fa-fw fa-history"></i>
-                    <span>Log Aktivitas</span>
-                </a>
-            </li>
+                <!-- Nav Item - Posisi -->
+                <li class="nav-item {{ request()->routeIs('positions.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('positions.index') }}">
+                        <i class="fas fa-fw fa-briefcase"></i>
+                        <span>Posisi/Jabatan</span>
+                    </a>
+                </li>
+
+                <!-- Nav Item - Pengurus -->
+                <li class="nav-item {{ request()->routeIs('committees.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('committees.index') }}">
+                        <i class="fas fa-fw fa-users-cog"></i>
+                        <span>Data Pengurus</span>
+                    </a>
+                </li>
+
+                <!-- Nav Item - Tugas & Tanggung Jawab -->
+                <li class="nav-item {{ request()->routeIs('job-responsibilities.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('job-responsibilities.index') }}">
+                        <i class="fas fa-fw fa-tasks"></i>
+                        <span>Tugas & Tanggung Jawab</span>
+                    </a>
+                </li>
+
+                <!-- Nav Item - Jadwal Piket -->
+                <li class="nav-item {{ request()->routeIs('duty-schedules.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('duty-schedules.index') }}">
+                        <i class="fas fa-fw fa-calendar-week"></i>
+                        <span>Jadwal Piket</span>
+                    </a>
+                </li>
+
+                <!-- Nav Item - Penugasan Tugas -->
+                <li class="nav-item {{ request()->routeIs('task-assignments.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('task-assignments.index') }}">
+                        <i class="fas fa-fw fa-clipboard-check"></i>
+                        <span>Penugasan Tugas</span>
+                    </a>
+                </li>
+
+                <!-- Nav Item - Struktur Organisasi -->
+                <li class="nav-item {{ request()->routeIs('organizational-structures.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('organizational-structures.index') }}">
+                        <i class="fas fa-fw fa-sitemap"></i>
+                        <span>Struktur Organisasi</span>
+                    </a>
+                </li>
+
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+
+                <!-- Heading -->
+                <div class="sidebar-heading">Informasi</div>
+
+                <!-- Nav Item - Artikel & Pengumuman -->
+                <li class="nav-item {{ request()->routeIs('articles.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('articles.index') }}">
+                        <i class="fas fa-fw fa-newspaper"></i>
+                        <span>Artikel & Pengumuman</span>
+                    </a>
+                </li>
+
+                <!-- Nav Item - Jadwal Sholat -->
+                <li class="nav-item {{ request()->routeIs('prayer-schedules.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('prayer-schedules.index') }}">
+                        <i class="fas fa-fw fa-pray"></i>
+                        <span>Jadwal Sholat</span>
+                    </a>
+                </li>
+
+                @if(auth()->user()->isAdmin() || auth()->user()->isSuperAdmin())
+                <!-- Nav Item - Log Aktivitas -->
+                <li class="nav-item {{ request()->routeIs('log-aktivitas.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('log-aktivitas.index') }}">
+                        <i class="fas fa-fw fa-history"></i>
+                        <span>Log Aktivitas</span>
+                    </a>
+                </li>
+                @endif
+            @else
+                <!-- Menu khusus untuk Jemaah / user umum -->
+                <div class="sidebar-heading">Menu Jamaah</div>
+
+                <li class="nav-item {{ request()->routeIs('events.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('events.index') }}">
+                        <i class="fas fa-fw fa-calendar-check"></i>
+                        <span>Event Masjid</span>
+                    </a>
+                </li>
+
+                <li class="nav-item {{ request()->routeIs('kegiatan.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('kegiatan.index') }}">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Kegiatan Masjid</span>
+                    </a>
+                </li>
+
+                <li class="nav-item {{ request()->routeIs('donasi.index') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('donasi.index') }}">
+                        <i class="fas fa-fw fa-hand-holding-heart"></i>
+                        <span>Program Donasi</span>
+                    </a>
+                </li>
+
+                <li class="nav-item {{ request()->routeIs('donasi.my-donations') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('donasi.my-donations') }}">
+                        <i class="fas fa-fw fa-history"></i>
+                        <span>Riwayat Donasi Saya</span>
+                    </a>
+                </li>
+
+                <li class="nav-item {{ request()->routeIs('kurban.index') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('kurban.index') }}">
+                        <i class="fas fa-fw fa-drumstick-bite"></i>
+                        <span>Program Kurban</span>
+                    </a>
+                </li>
+
+                <li class="nav-item {{ request()->routeIs('kurban.my-kurban') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('kurban.my-kurban') }}">
+                        <i class="fas fa-fw fa-list"></i>
+                        <span>Riwayat Kurban Saya</span>
+                    </a>
+                </li>
+
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+
+                <div class="sidebar-heading">Informasi</div>
+
+                <li class="nav-item {{ request()->routeIs('articles.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('articles.index') }}">
+                        <i class="fas fa-fw fa-newspaper"></i>
+                        <span>Artikel & Pengumuman</span>
+                    </a>
+                </li>
+
+                <li class="nav-item {{ request()->routeIs('prayer-schedules.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('prayer-schedules.index') }}">
+                        <i class="fas fa-fw fa-pray"></i>
+                        <span>Jadwal Sholat</span>
+                    </a>
+                </li>
             @endif
 
             <!-- Divider -->
@@ -261,6 +385,10 @@
                                     <span class="badge badge-warning">DKM</span>
                                 @elseif(auth()->user()->isPanitia())
                                     <span class="badge badge-info">Panitia</span>
+                                @elseif(auth()->user()->isMuzakki())
+                                    <span class="badge badge-primary">Muzakki</span>
+                                @elseif(auth()->user()->isMustahik())
+                                    <span class="badge badge-success">Mustahik</span>
                                 @elseif(auth()->user()->isJemaah())
                                     <span class="badge badge-success">Jemaah</span>
                                 @else
@@ -330,7 +458,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Sistem Manajemen Masjid Al-Nassr {{ date('Y') }}</span>
+                        <span>Copyright &copy; Sistem Manajemen Masjid Al-Ikhlas {{ date('Y') }}</span>
                     </div>
                 </div>
             </footer>

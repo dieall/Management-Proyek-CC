@@ -54,7 +54,12 @@
                 @if($event->kuota)
                 <p class="text-muted mb-2">
                     <i class="fas fa-users"></i> 
-                    {{ $event->attendees }} / {{ $event->kuota }} peserta
+                    {{ $event->peserta->count() }} / {{ $event->kuota }} peserta
+                </p>
+                @else
+                <p class="text-muted mb-2">
+                    <i class="fas fa-users"></i> 
+                    {{ $event->peserta->count() }} peserta
                 </p>
                 @endif
                 

@@ -40,5 +40,23 @@ class RiwayatKurban extends Model
     {
         return $this->belongsTo(User::class, 'id_jamaah');
     }
+
+    // Relasi ke Dokumentasi Kurban
+    public function dokumentasi()
+    {
+        return $this->hasMany(DokumentasiKurban::class, 'id_riwayat_kurban');
+    }
+
+    // Helper: Foto penyembelihan
+    public function fotoPenyembelihan()
+    {
+        return $this->dokumentasi()->where('jenis_dokumentasi', 'penyembelihan')->get();
+    }
+
+    // Helper: Foto pembagian daging
+    public function fotoPembagianDaging()
+    {
+        return $this->dokumentasi()->where('jenis_dokumentasi', 'pembagian_daging')->get();
+    }
 }
 

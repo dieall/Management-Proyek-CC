@@ -38,5 +38,13 @@ class Event extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    // Relasi Many-to-Many dengan Users (Jemaah yang mendaftar)
+    public function peserta()
+    {
+        return $this->belongsToMany(User::class, 'event_registrations', 'event_id', 'user_id')
+                    ->withPivot('tanggal_daftar', 'status_kehadiran')
+                    ->withTimestamps();
+    }
 }
 

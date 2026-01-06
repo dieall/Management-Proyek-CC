@@ -44,7 +44,9 @@
             <div class="col-md-6">
                 <p><strong><i class="fas fa-user"></i> Pembuat:</strong> {{ $event->creator->nama_lengkap ?? $event->creator->name ?? '-' }}</p>
                 @if($event->kuota)
-                <p><strong><i class="fas fa-users"></i> Kuota:</strong> {{ $event->attendees }} / {{ $event->kuota }} peserta</p>
+                <p><strong><i class="fas fa-users"></i> Kuota:</strong> {{ $event->peserta->count() }} / {{ $event->kuota }} peserta</p>
+                @else
+                <p><strong><i class="fas fa-users"></i> Peserta:</strong> {{ $event->peserta->count() }} orang</p>
                 @endif
             </div>
         </div>
@@ -74,7 +76,31 @@
         
         <!-- Tombol Aksi -->
         <div class="mt-4">
+            @if(auth()->user()->isJemaah() && $event->status === 'published')
+                @if($isRegistered)
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i> Anda sudah terdaftar di event ini.
+                    </div>
+                @else
+                    @if($event->kuota && $event->peserta->count() >= $event->kuota)
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i> Kuota event sudah penuh.
+                        </div>
+                    @else
+                        <form action="{{ route('events.daftar', $event->event_id) }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-user-plus"></i> Daftar Event
+                            </button>
+                        </form>
+                    @endif
+                @endif
+            @endif
+
             @if(auth()->user()->isAdmin() || auth()->user()->isSuperAdmin() || auth()->user()->isDkm() || (auth()->user()->isPanitia() && $event->created_by == auth()->id()))
+                <a href="{{ route('events.peserta', $event->event_id) }}" class="btn btn-info">
+                    <i class="fas fa-users"></i> Lihat Peserta ({{ $event->peserta->count() }})
+                </a>
                 <a href="{{ route('events.edit', $event->event_id) }}" class="btn btn-warning">
                     <i class="fas fa-edit"></i> Edit Event
                 </a>

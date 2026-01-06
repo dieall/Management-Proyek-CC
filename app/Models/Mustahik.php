@@ -13,6 +13,7 @@ class Mustahik extends Model
     protected $primaryKey = 'id_mustahik';
 
     protected $fillable = [
+        'user_id',
         'nama',
         'alamat',
         'kategori_mustahik',
@@ -31,6 +32,12 @@ class Mustahik extends Model
     protected $casts = [
         'tgl_daftar' => 'datetime',
     ];
+
+    // Relasi ke User
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
     // Relasi ke Penyaluran
     public function penyaluran()
@@ -55,6 +62,7 @@ class Mustahik extends Model
         return $query->where('status_verifikasi', 'disetujui');
     }
 }
+
 
 
 

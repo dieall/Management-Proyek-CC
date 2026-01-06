@@ -69,8 +69,8 @@
                                         <label for="jenis_pembayaran">Jenis Pembayaran <span class="text-danger">*</span></label>
                                         <select class="form-control @error('jenis_pembayaran') is-invalid @enderror" 
                                                 id="jenis_pembayaran" name="jenis_pembayaran" required>
-                                            <option value="penuh" {{ old('jenis_pembayaran') == 'penuh' ? 'selected' : '' }}>Penuh (1 Hewan)</option>
-                                            <option value="patungan" {{ old('jenis_pembayaran') == 'patungan' ? 'selected' : '' }}>Patungan (7 Orang)</option>
+                                            <option value="transfer" {{ old('jenis_pembayaran') == 'transfer' ? 'selected' : '' }}>Transfer</option>
+                                            <option value="tunai" {{ old('jenis_pembayaran') == 'tunai' ? 'selected' : '' }}>Tunai</option>
                                         </select>
                                         @error('jenis_pembayaran')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -112,13 +112,14 @@
                                 </div>
                             </div>
                             <div class="row">
+                                @if(auth()->user()->isAdmin() || auth()->user()->isSuperAdmin() || auth()->user()->isDkm())
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="status_pembayaran">Status Pembayaran</label>
                                         <select class="form-control @error('status_pembayaran') is-invalid @enderror" 
                                                 id="status_pembayaran" name="status_pembayaran">
                                             <option value="lunas" {{ old('status_pembayaran') == 'lunas' ? 'selected' : '' }}>Lunas</option>
-                                            <option value="cicilan" {{ old('status_pembayaran') == 'cicilan' ? 'selected' : '' }}>Cicilan</option>
+                                            <option value="verifikasi" {{ old('status_pembayaran') == 'verifikasi' ? 'selected' : '' }}>Verifikasi</option>
                                             <option value="belum_lunas" {{ old('status_pembayaran', 'belum_lunas') == 'belum_lunas' ? 'selected' : '' }}>Belum Lunas</option>
                                         </select>
                                         @error('status_pembayaran')
@@ -126,6 +127,7 @@
                                         @enderror
                                     </div>
                                 </div>
+                                @endif
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="keterangan">Keterangan</label>
@@ -203,18 +205,23 @@
                         <th>Status Pembayaran</th>
                         <th>Tanggal Pembayaran</th>
                         <th>Keterangan</th>
+                        @if(auth()->user()->isAdmin() || auth()->user()->isSuperAdmin() || auth()->user()->isDkm())
+                        <th>Aksi</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($riwayatKurban as $index => $riwayat)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $riwayat->nama_lengkap }}</td>
+                        <td>{{ $riwayat->jamaah->nama_lengkap ?? $riwayat->jamaah->name ?? '-' }}</td>
                         <td>
-                            @if($riwayat->jenis_pembayaran == 'penuh')
-                                <span class="badge badge-success">Penuh</span>
+                            @if($riwayat->jenis_pembayaran == 'transfer')
+                                <span class="badge badge-primary">Transfer</span>
+                            @elseif($riwayat->jenis_pembayaran == 'tunai')
+                                <span class="badge badge-success">Tunai</span>
                             @else
-                                <span class="badge badge-info">Patungan</span>
+                                <span class="badge badge-secondary">{{ ucfirst($riwayat->jenis_pembayaran) }}</span>
                             @endif
                         </td>
                         <td>{{ $riwayat->jumlah_hewan }} Ekor</td>
@@ -222,18 +229,137 @@
                         <td>
                             @if($riwayat->status_pembayaran == 'lunas')
                                 <span class="badge badge-success">Lunas</span>
-                            @elseif($riwayat->status_pembayaran == 'cicilan')
-                                <span class="badge badge-warning">Cicilan</span>
+                            @elseif($riwayat->status_pembayaran == 'verifikasi')
+                                <span class="badge badge-warning">Verifikasi</span>
                             @else
                                 <span class="badge badge-danger">Belum Lunas</span>
                             @endif
                         </td>
                         <td>{{ \Carbon\Carbon::parse($riwayat->tanggal_pembayaran)->format('d/m/Y') }}</td>
                         <td>{{ $riwayat->keterangan ?? '-' }}</td>
+                        @if(auth()->user()->isAdmin() || auth()->user()->isSuperAdmin() || auth()->user()->isDkm())
+                        <td>
+                            <form action="{{ route('kurban.update-status', $riwayat->id_riwayat_kurban) }}" method="POST" class="d-inline" id="form-status-{{ $riwayat->id_riwayat_kurban }}">
+                                @csrf
+                                @method('PATCH')
+                                <select name="status_pembayaran" class="form-control form-control-sm" onchange="if(confirm('Yakin ingin mengubah status pembayaran?')) { this.form.submit(); }">
+                                    <option value="verifikasi" {{ $riwayat->status_pembayaran == 'verifikasi' ? 'selected' : '' }}>Verifikasi</option>
+                                    <option value="lunas" {{ $riwayat->status_pembayaran == 'lunas' ? 'selected' : '' }}>Lunas</option>
+                                    <option value="belum_lunas" {{ $riwayat->status_pembayaran == 'belum_lunas' ? 'selected' : '' }}>Belum Lunas</option>
+                                </select>
+                            </form>
+                        </td>
+                        @endif
                     </tr>
+                    <!-- Row untuk dokumentasi (expandable) -->
+                    @if(auth()->user()->isAdmin() || auth()->user()->isSuperAdmin() || auth()->user()->isDkm())
+                    <tr class="bg-light">
+                        <td colspan="{{ auth()->user()->isAdmin() || auth()->user()->isSuperAdmin() || auth()->user()->isDkm() ? '9' : '8' }}">
+                            <div class="p-3">
+                                <h6 class="mb-3"><i class="fas fa-images"></i> Dokumentasi Kurban - {{ $riwayat->jamaah->nama_lengkap ?? $riwayat->jamaah->name ?? '-' }}</h6>
+                                
+                                <!-- Form Upload Dokumentasi -->
+                                <form action="{{ route('kurban.upload-dokumentasi') }}" method="POST" enctype="multipart/form-data" class="mb-4">
+                                    @csrf
+                                    <input type="hidden" name="id_riwayat_kurban" value="{{ $riwayat->id_riwayat_kurban }}">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Jenis Dokumentasi</label>
+                                                <select name="jenis_dokumentasi" class="form-control form-control-sm" required>
+                                                    <option value="penyembelihan">Penyembelihan</option>
+                                                    <option value="pembagian_daging">Pembagian Daging</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Upload Foto</label>
+                                                <input type="file" name="foto" class="form-control form-control-sm" accept="image/*" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Keterangan</label>
+                                                <input type="text" name="keterangan" class="form-control form-control-sm" placeholder="Opsional">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label>&nbsp;</label>
+                                                <button type="submit" class="btn btn-sm btn-primary btn-block">
+                                                    <i class="fas fa-upload"></i> Upload
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <!-- Tampilkan Foto Dokumentasi -->
+                                <div class="row">
+                                    <!-- Foto Penyembelihan -->
+                                    <div class="col-md-6">
+                                        <h6 class="text-primary"><i class="fas fa-cut"></i> Foto Penyembelihan</h6>
+                                        <div class="row">
+                                            @forelse($riwayat->dokumentasi->where('jenis_dokumentasi', 'penyembelihan') as $foto)
+                                            <div class="col-md-6 mb-3">
+                                                <div class="card">
+                                                    <img src="{{ asset('storage/' . $foto->foto) }}" class="card-img-top" alt="Penyembelihan" style="height: 200px; object-fit: cover;">
+                                                    <div class="card-body p-2">
+                                                        <p class="card-text small mb-1">{{ $foto->keterangan ?? '-' }}</p>
+                                                        <form action="{{ route('kurban.delete-dokumentasi', $foto->id_dokumentasi) }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus foto ini?')">
+                                                                <i class="fas fa-trash"></i> Hapus
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @empty
+                                            <div class="col-12">
+                                                <p class="text-muted small">Belum ada foto penyembelihan</p>
+                                            </div>
+                                            @endforelse
+                                        </div>
+                                    </div>
+
+                                    <!-- Foto Pembagian Daging -->
+                                    <div class="col-md-6">
+                                        <h6 class="text-success"><i class="fas fa-gift"></i> Foto Pembagian Daging</h6>
+                                        <div class="row">
+                                            @forelse($riwayat->dokumentasi->where('jenis_dokumentasi', 'pembagian_daging') as $foto)
+                                            <div class="col-md-6 mb-3">
+                                                <div class="card">
+                                                    <img src="{{ asset('storage/' . $foto->foto) }}" class="card-img-top" alt="Pembagian Daging" style="height: 200px; object-fit: cover;">
+                                                    <div class="card-body p-2">
+                                                        <p class="card-text small mb-1">{{ $foto->keterangan ?? '-' }}</p>
+                                                        <form action="{{ route('kurban.delete-dokumentasi', $foto->id_dokumentasi) }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus foto ini?')">
+                                                                <i class="fas fa-trash"></i> Hapus
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @empty
+                                            <div class="col-12">
+                                                <p class="text-muted small">Belum ada foto pembagian daging</p>
+                                            </div>
+                                            @endforelse
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    @endif
                     @empty
                     <tr>
-                        <td colspan="8" class="text-center">Belum ada pendaftaran kurban</td>
+                        <td colspan="{{ auth()->user()->isAdmin() || auth()->user()->isSuperAdmin() || auth()->user()->isDkm() ? '9' : '8' }}" class="text-center">Belum ada pendaftaran kurban</td>
                     </tr>
                     @endforelse
                 </tbody>

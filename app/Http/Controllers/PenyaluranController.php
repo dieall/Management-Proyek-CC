@@ -11,6 +11,13 @@ class PenyaluranController extends Controller
 {
     public function index()
     {
+        $user = auth()->user();
+        
+        // Jika user adalah mustahik, redirect ke halaman riwayat mereka sendiri
+        if ($user->isMustahik() && $user->mustahik) {
+            return redirect()->route('penyaluran.my-penyaluran');
+        }
+        
         $penyaluran = Penyaluran::with(['zisMasuk.muzakki', 'mustahik'])
                                  ->orderBy('tgl_salur', 'desc')
                                  ->get();
@@ -21,6 +28,28 @@ class PenyaluranController extends Controller
         $jumlahMustahik = Mustahik::has('penyaluran')->count();
         
         return view('zis.penyaluran.index', compact('penyaluran', 'totalDisalurkan', 'jumlahPenyaluran', 'jumlahMustahik'));
+    }
+
+    // Riwayat penyaluran untuk Mustahik sendiri
+    public function myPenyaluran()
+    {
+        $user = auth()->user();
+        
+        if (!$user->isMustahik() || !$user->mustahik) {
+            abort(403, 'Hanya mustahik yang dapat mengakses halaman ini.');
+        }
+        
+        $mustahik = $user->mustahik;
+        $penyaluran = Penyaluran::where('id_mustahik', $mustahik->id_mustahik)
+                                ->with(['zisMasuk.muzakki'])
+                                ->orderBy('tgl_salur', 'desc')
+                                ->get();
+        
+        // Statistik untuk mustahik ini
+        $totalDiterima = $penyaluran->sum('jumlah');
+        $jumlahPenyaluran = $penyaluran->count();
+        
+        return view('zis.penyaluran.my-penyaluran', compact('penyaluran', 'mustahik', 'totalDiterima', 'jumlahPenyaluran'));
     }
 
     public function create()

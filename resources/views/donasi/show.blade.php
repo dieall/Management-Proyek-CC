@@ -34,36 +34,57 @@
                     </tr>
                 </table>
 
-                <!-- Form Submit Donasi -->
+                @if(auth()->user()->isAdmin() || auth()->user()->isSuperAdmin() || auth()->user()->isDkm())
+                <!-- Form Submit Donasi (hanya untuk admin/DKM) -->
                 <div class="card border-left-success mt-4">
                     <div class="card-body">
                         <h6 class="font-weight-bold text-success mb-3">
-                            <i class="fas fa-hand-holding-usd"></i> Donasi Sekarang
+                            <i class="fas fa-hand-holding-usd"></i> Catat Donasi
                         </h6>
                         <form action="{{ route('donasi.submit', $donasi->id_donasi) }}" method="POST">
                             @csrf
                             <div class="form-group">
-                                <label for="besar_donasi">Jumlah Donasi (Rp)</label>
+                                <label for="id_jamaah">Nama Jamaah <span class="text-danger">*</span></label>
+                                <select class="form-control @error('id_jamaah') is-invalid @enderror" 
+                                        id="id_jamaah" name="id_jamaah" required>
+                                    <option value="">-- Pilih Jamaah --</option>
+                                    @foreach($jamaahs as $jamaah)
+                                        <option value="{{ $jamaah->id }}" {{ old('id_jamaah') == $jamaah->id ? 'selected' : '' }}>
+                                            {{ $jamaah->nama_lengkap ?? $jamaah->name }} 
+                                            @if($jamaah->email)
+                                                ({{ $jamaah->email }})
+                                            @endif
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('id_jamaah')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                <small class="form-text text-muted">Pilih jamaah yang melakukan donasi</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="besar_donasi">Jumlah Donasi (Rp) <span class="text-danger">*</span></label>
                                 <input type="number" class="form-control @error('besar_donasi') is-invalid @enderror" 
-                                       id="besar_donasi" name="besar_donasi" min="1000" step="1000" required>
+                                       id="besar_donasi" name="besar_donasi" min="1000" step="1000" value="{{ old('besar_donasi') }}" required>
                                 @error('besar_donasi')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label for="tanggal_donasi">Tanggal Donasi</label>
+                                <label for="tanggal_donasi">Tanggal Donasi <span class="text-danger">*</span></label>
                                 <input type="date" class="form-control @error('tanggal_donasi') is-invalid @enderror" 
-                                       id="tanggal_donasi" name="tanggal_donasi" value="{{ date('Y-m-d') }}" required>
+                                       id="tanggal_donasi" name="tanggal_donasi" value="{{ old('tanggal_donasi', date('Y-m-d')) }}" required>
                                 @error('tanggal_donasi')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <button type="submit" class="btn btn-success">
-                                <i class="fas fa-donate"></i> Submit Donasi
+                                <i class="fas fa-donate"></i> Catat Donasi
                             </button>
                         </form>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
     </div>

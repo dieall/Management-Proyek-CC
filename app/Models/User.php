@@ -89,6 +89,16 @@ class User extends Authenticatable
         return $this->role === 'jemaah';
     }
 
+    public function isMuzakki()
+    {
+        return $this->role === 'muzakki';
+    }
+
+    public function isMustahik()
+    {
+        return $this->role === 'mustahik';
+    }
+
     // Relasi untuk modul Inventaris
     public function jadwalPerawatan()
     {
@@ -124,9 +134,29 @@ class User extends Authenticatable
                     ->withPivot('besar_donasi', 'tanggal_donasi');
     }
 
+    // Relasi untuk modul Event
+    public function events()
+    {
+        return $this->belongsToMany(Event::class, 'event_registrations', 'user_id', 'event_id')
+                    ->withPivot('tanggal_daftar', 'status_kehadiran')
+                    ->withTimestamps();
+    }
+
     // Relasi untuk modul Takmir
     public function committee()
     {
         return $this->hasOne(Committee::class);
+    }
+
+    // Relasi ke Muzakki (pemberi ZIS)
+    public function muzakki()
+    {
+        return $this->hasOne(Muzakki::class, 'user_id');
+    }
+
+    // Relasi ke Mustahik (penerima ZIS) - opsional, jika dihubungkan ke users
+    public function mustahik()
+    {
+        return $this->hasOne(Mustahik::class, 'user_id');
     }
 }
