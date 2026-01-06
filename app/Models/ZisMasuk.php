@@ -74,3 +74,9 @@ class ZisMasuk extends Model
 
 
 
+
+
+
+
+
+

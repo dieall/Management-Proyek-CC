@@ -23,6 +23,7 @@ use App\Http\Controllers\JobResponsibilityController;
 use App\Http\Controllers\DutyScheduleController;
 use App\Http\Controllers\TaskAssignmentController;
 use App\Http\Controllers\OrganizationalStructureController;
+use App\Http\Controllers\KurbanController;
 
 // Login Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -61,6 +62,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('donasi/{id}/submit', [DonasiController::class, 'submitDonasi'])->name('donasi.submit');
     Route::get('my-donations', [DonasiController::class, 'myDonations'])->name('donasi.my-donations');
     
+    // Kurban Routes
+    Route::resource('kurban', KurbanController::class);
+    Route::post('kurban/{id}/submit', [KurbanController::class, 'submitPendaftaran'])->name('kurban.submit');
+    Route::get('my-kurban', [KurbanController::class, 'myKurban'])->name('kurban.my-kurban');
+    
     // ZIS Management Routes
     Route::resource('muzakki', MuzakkiController::class);
     Route::post('muzakki/{id}/approve', [MuzakkiController::class, 'approve'])->name('muzakki.approve');
@@ -87,4 +93,3 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('task-assignments', TaskAssignmentController::class);
     Route::resource('organizational-structures', OrganizationalStructureController::class);
 });
-

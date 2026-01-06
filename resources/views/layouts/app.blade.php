@@ -96,6 +96,14 @@
                 </a>
             </li>
 
+            <!-- Nav Item - Kurban -->
+            <li class="nav-item {{ request()->routeIs('kurban.*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('kurban.index') }}">
+                    <i class="fas fa-fw fa-drumstick-bite"></i>
+                    <span>Program Kurban</span>
+                </a>
+            </li>
+
             <!-- Divider -->
             <hr class="sidebar-divider">
 

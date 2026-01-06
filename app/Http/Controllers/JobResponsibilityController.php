@@ -105,3 +105,9 @@ class JobResponsibilityController extends Controller
     }
 }
 
+
+
+
+
+
+

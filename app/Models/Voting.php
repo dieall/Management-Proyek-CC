@@ -70,3 +70,9 @@ class Voting extends Model
     }
 }
 
+
+
+
+
+
+

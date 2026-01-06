@@ -185,3 +185,9 @@ CREATE TABLE IF NOT EXISTS votes (
     INDEX idx_committee (committee_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+
+
+
+
+
+

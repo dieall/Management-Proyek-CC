@@ -50,3 +50,9 @@ class JobResponsibility extends Model
     }
 }
 
+
+
+
+
+
+
