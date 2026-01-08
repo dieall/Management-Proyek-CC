@@ -25,6 +25,7 @@ use App\Http\Controllers\TaskAssignmentController;
 use App\Http\Controllers\OrganizationalStructureController;
 use App\Http\Controllers\KurbanController;
 use App\Http\Controllers\LandingPageController;
+use App\Http\Controllers\UserController;
 
 // Landing Page (Public)
 Route::get('/', [LandingPageController::class, 'index'])->name('landing');
@@ -55,6 +56,7 @@ Route::middleware(['auth'])->group(function () {
     
     // Laporan Perawatan Routes
     Route::resource('laporan-perawatan', LaporanPerawatanController::class);
+    Route::get('laporan-perawatan-pdf', [LaporanPerawatanController::class, 'pdf'])->name('laporan-perawatan.pdf');
     
     // Log Aktivitas Routes
     Route::get('log-aktivitas', [LogAktivitasController::class, 'index'])->name('log-aktivitas.index');
@@ -104,4 +106,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('duty-schedules', DutyScheduleController::class);
     Route::resource('task-assignments', TaskAssignmentController::class);
     Route::resource('organizational-structures', OrganizationalStructureController::class);
+    
+    // Manajemen User Routes (Hanya Admin/SuperAdmin/DKM)
+    Route::resource('users', UserController::class);
 });

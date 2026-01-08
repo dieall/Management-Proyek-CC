@@ -5,10 +5,18 @@
 @section('content')
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Laporan Perawatan</h1>
-    <a href="{{ route('laporan-perawatan.create') }}" class="btn btn-primary">
-        <i class="fas fa-plus"></i> Tambah Laporan
-    </a>
-</div>
+    <div class="btn-group">
+        <a href="{{ route('laporan-perawatan.pdf') }}" target="_blank" class="btn btn-danger">
+            <i class="fas fa-file-pdf"></i> Export PDF
+        </a>
+        <button type="button" onclick="window.print()" class="btn btn-secondary">
+            <i class="fas fa-print"></i> Print
+        </button>
+        <a href="{{ route('laporan-perawatan.create') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Tambah Laporan
+        </a>
+    </div>
+</div>  
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
@@ -73,6 +81,9 @@
     </div>
 </div>
 @endsection
+
+
+
 
 
 

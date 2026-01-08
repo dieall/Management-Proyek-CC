@@ -410,15 +410,15 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6 text-center mb-3">
-                        <h3 class="text-primary">{{ $totalMustahik }}</h3>
-                        <p class="text-muted mb-0">Mustahik Aktif</p>
+                    <h3 class="text-primary">{{ $totalMustahik }}</h3>
+                    <p class="text-muted mb-0">Mustahik Aktif</p>
                         <div class="mt-3">
-                            <a href="{{ route('mustahik.index') }}" class="btn btn-primary btn-sm">
-                                <i class="fas fa-users"></i> Kelola Mustahik
-                            </a>
-                            <a href="{{ route('penyaluran.index') }}" class="btn btn-success btn-sm">
-                                <i class="fas fa-share-square"></i> Penyaluran ZIS
-                            </a>
+                    <a href="{{ route('mustahik.index') }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-users"></i> Kelola Mustahik
+                    </a>
+                    <a href="{{ route('penyaluran.index') }}" class="btn btn-success btn-sm">
+                        <i class="fas fa-share-square"></i> Penyaluran ZIS
+                    </a>
                         </div>
                     </div>
                     <div class="col-md-6">

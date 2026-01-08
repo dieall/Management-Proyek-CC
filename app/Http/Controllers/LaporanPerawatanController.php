@@ -9,6 +9,7 @@ use App\Models\Aset;
 use App\Models\LogAktivitas;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class LaporanPerawatanController extends Controller
 {
@@ -20,6 +21,18 @@ class LaporanPerawatanController extends Controller
             ->paginate(10);
         
         return view('laporan-perawatan.index', compact('laporan', 'user'));
+    }
+
+    public function pdf()
+    {
+        $laporan = LaporanPerawatan::with('aset', 'user', 'jadwalPerawatan')
+            ->orderBy('tanggal_pemeriksaan', 'desc')
+            ->get();
+
+        $pdf = Pdf::loadView('laporan-perawatan.pdf', compact('laporan'))
+            ->setPaper('a4', 'landscape');
+
+        return $pdf->stream('laporan-perawatan.pdf');
     }
 
     public function create(Request $request)
