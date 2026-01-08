@@ -1,6 +1,17 @@
-# 🕌 Sistem Manajemen Masjid Al-Nassr
+# 🕌 Sistem Manajemen Masjid Al-Ikhlas
 
-Sistem manajemen terintegrasi untuk masjid dengan 3 modul utama.
+Sistem manajemen terintegrasi untuk masjid dengan berbagai modul lengkap.
+
+## 📚 **PANDUAN INSTALASI LENGKAP**
+
+**Untuk pengguna baru, silakan baca panduan instalasi lengkap:**
+
+- 📖 **[PANDUAN_INSTALASI_DAN_PENGGUNAAN.md](PANDUAN_INSTALASI_DAN_PENGGUNAAN.md)** - Panduan step-by-step lengkap dengan screenshot dan troubleshooting
+- ⚡ **[QUICK_START.md](QUICK_START.md)** - Panduan cepat untuk pengguna yang sudah familiar dengan Laravel
+
+---
+
+## ✨ Fitur Lengkap
 
 ## ✨ Fitur Lengkap
 
@@ -116,19 +127,25 @@ Dashboard menampilkan:
 
 ## 🛠️ Tech Stack
 
-- **Framework**: Laravel 11
-- **Database**: MySQL
-- **Frontend**: Bootstrap (SB Admin 2)
+- **Framework**: Laravel 12
+- **Database**: MySQL/MariaDB
+- **Frontend**: Bootstrap (SB Admin 2), Tailwind CSS, Vite
 - **Icons**: Font Awesome
 - **PHP**: 8.2+
+- **Package Tambahan**: DomPDF (Export PDF), Simple QR Code
 
 ## 📖 Dokumentasi
 
-Lihat file `INTEGRASI_LENGKAP.md` untuk dokumentasi lengkap tentang:
-- Detail integrasi ketiga modul
-- Struktur database
-- Routes API
-- Technical details
+### **Untuk Pengguna**:
+- 📖 **[PANDUAN_INSTALASI_DAN_PENGGUNAAN.md](PANDUAN_INSTALASI_DAN_PENGGUNAAN.md)** - Panduan instalasi dan penggunaan lengkap
+- ⚡ **[QUICK_START.md](QUICK_START.md)** - Quick start guide
+
+### **Untuk Developer**:
+- 📋 **[INTEGRASI_LENGKAP.md](INTEGRASI_LENGKAP.md)** - Dokumentasi teknis lengkap:
+  - Detail integrasi semua modul
+  - Struktur database
+  - Routes API
+  - Technical details
 
 ## 🎉 Status Integrasi
 
@@ -138,8 +155,13 @@ Lihat file `INTEGRASI_LENGKAP.md` untuk dokumentasi lengkap tentang:
 | ✅ Inventaris/Aset | Terintegrasi |
 | ✅ Kegiatan Masjid | Terintegrasi |
 | ✅ Program Donasi | Terintegrasi |
+| ✅ Program Kurban | Terintegrasi |
+| ✅ ZIS Management | Terintegrasi |
+| ✅ Manajemen Takmir | Terintegrasi |
+| ✅ Jadwal Sholat (API) | Terintegrasi |
 | ✅ Dashboard Unified | Terintegrasi |
 | ✅ Role-Based Access | Terintegrasi |
+| ✅ Export PDF | Terintegrasi |
 
 ## 📝 Notes
 
@@ -150,4 +172,14 @@ Lihat file `INTEGRASI_LENGKAP.md` untuk dokumentasi lengkap tentang:
 
 ---
 
-Dibuat dengan ❤️ untuk Masjid Al-Nassr
+## 🆘 Butuh Bantuan?
+
+1. **Baca panduan lengkap**: [PANDUAN_INSTALASI_DAN_PENGGUNAAN.md](PANDUAN_INSTALASI_DAN_PENGGUNAAN.md)
+2. **Cek troubleshooting**: Lihat bagian Troubleshooting di panduan lengkap
+3. **Quick start**: [QUICK_START.md](QUICK_START.md)
+
+---
+
+**Dibuat dengan ❤️ untuk Masjid Al-Ikhlas**
+
+*Terakhir diperbarui: 2025*
